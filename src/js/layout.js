@@ -2,13 +2,18 @@ import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 
-import { Home } from "./views/home";
-import { Demo } from "./views/demo";
-import { Single } from "./views/single";
 import injectContext from "./store/appContext";
 
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
+
+//Views
+import { Home } from "./views/landing";
+import { Principal } from "./views/principal";
+import { NewMeeting } from "./views/newmeeting";
+import { MyProfile } from "./views/myprofile";
+import { Memo } from "./views/memo";
+import { Payment } from "./views/payment";
 
 //create your first component
 export const Layout = () => {
@@ -22,9 +27,14 @@ export const Layout = () => {
 				<ScrollToTop>
 					<Navbar />
 					<Switch>
+						<Route exact path="/newmeeting/:id" component={NewMeeting} />
+						<Route exact path="/newmeeting" component={NewMeeting} />
+						<Route exact path="/memo/:id" component={Memo} />
+						<Route exact path="/memo" component={Memo} />
+						<Route exact path="/payment" component={Payment} />
+						<Route exact path="/myprofile" component={MyProfile} />
+						<Route exact path="/principal" component={Principal} />
 						<Route exact path="/" component={Home} />
-						<Route path="/demo" component={Demo} />
-						<Route path="/single/:theid" component={Single} />
 						<Route render={() => <h1>Not found!</h1>} />
 					</Switch>
 					<Footer />

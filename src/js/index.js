@@ -8,6 +8,10 @@ import "bootstrap/dist/css/bootstrap.css";
 //include your index.scss file into the bundle
 import "../styles/index.scss";
 
+import "jquery";
+import "popper.js";
+import "bootstrap";
+
 //import your own components
 import Layout from "./layout";
 

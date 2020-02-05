@@ -12,7 +12,7 @@ import { Home } from "./views/landing";
 import { Principal } from "./views/principal";
 import { NewMeeting } from "./views/newmeeting";
 import { MyProfile } from "./views/myprofile";
-import { Memo } from "./views/memo";
+import { MemoDetails } from "./views/memodetails";
 import { Payment } from "./views/payment";
 
 //create your first component
@@ -29,8 +29,8 @@ export const Layout = () => {
 					<Switch>
 						<Route exact path="/newmeeting/:id" component={NewMeeting} />
 						<Route exact path="/newmeeting" component={NewMeeting} />
-						<Route exact path="/memo/:id" component={Memo} />
-						<Route exact path="/memo" component={Memo} />
+						<Route exact path="/memodetails/:id" component={MemoDetails} />
+						<Route exact path="/memodetails" component={MemoDetails} />
 						<Route exact path="/payment" component={Payment} />
 						<Route exact path="/myprofile" component={MyProfile} />
 						<Route exact path="/principal" component={Principal} />

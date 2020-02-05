@@ -6,41 +6,64 @@ export const Navbar = () => {
 	const { store, actions } = useContext(Context);
 
 	return (
-		<nav className="navbar navbar-expand-lg navbar-light bg-light">
-			<div className="collapse navbar-collapse" id="navbarSupportedContent">
-				<ul className="navbar-nav">
-					<li className="nav-item">
-						<Link to="/">
-							<span className="navbar-brand mb-0 h1">Home</span>
-						</Link>
-					</li>
-					<li className="nav-item">
-						<Link to="/principal">
-							<span className="navbar-brand mb-0 h1">PrincipalPanel</span>
-						</Link>
-					</li>
-					<li className="nav-item">
-						<Link to="/newmeeting">
-							<span className="navbar-brand mb-0 h1">NewMeeting</span>
-						</Link>
-					</li>
-					<li className="nav-item">
-						<Link to="/myprofile">
-							<span className="navbar-brand mb-0 h1">MyProfile</span>
-						</Link>
-					</li>
-					<li className="nav-item">
-						<Link to="/payment">
-							<span className="navbar-brand mb-0 h1">Payment</span>
-						</Link>
-					</li>
-					<li className="nav-item">
-						<Link to="/memo">
-							<span className="navbar-brand mb-0 h1">Memorandum</span>
-						</Link>
-					</li>
-				</ul>
-			</div>
-		</nav>
+		<div className="container">
+			<nav
+				className="navbar navbar-light navbar-expand-md navigation-clean"
+				style={{ backgroundColor: "#192a56" }}>
+				<div className="container">
+					<Link to="/principal">
+						<a className="navbar-brand" href="#" style={{ color: "#f2f5f8" }}>
+							Orkasta
+						</a>
+					</Link>
+					<button data-toggle="collapse" className="navbar-toggler" data-target="#navcol-1">
+						<span className="sr-only">Toggle navigation</span>
+						<span className="navbar-toggler-icon" />
+					</button>
+					<div className="collapse navbar-collapse" id="navcol-1">
+						<ul className="nav navbar-nav ml-auto">
+							<li className="nav-item" role="presentation" />
+							<li className="nav-item" role="presentation" />
+							<li className="nav-item" role="presentation" />
+							<li className="nav-item dropdown show">
+								<a
+									className="nav-link dropdown-toggle"
+									href="#"
+									id="navbarDropdownMenuLink"
+									role="button"
+									data-toggle="dropdown"
+									aria-haspopup="true"
+									aria-expanded="false"
+									style={{ color: "#f2f5f8" }}>
+									Cuenta&nbsp;
+								</a>
+								<div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+									<Link to="/principal">
+										<a className="dropdown-item" href="#">
+											Panel Principal
+										</a>
+									</Link>
+									<Link to="/myprofile">
+										<a className="dropdown-item" href="#">
+											Mi Perfil
+										</a>
+									</Link>
+									<Link to="/payment">
+										<a className="dropdown-item" href="#">
+											Pago
+										</a>
+									</Link>
+									<Link to="/">
+										<a className="dropdown-item" href="#">
+											Salir
+										</a>
+									</Link>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</nav>
+		</div>
 	);
 };

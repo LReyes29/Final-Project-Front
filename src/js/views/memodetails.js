@@ -187,7 +187,7 @@ export const MemoDetails = props => {
 						<label>Seguimiento&nbsp;</label>
 						<input type="date" />
 					</div>
-					<div className="col align-self-center">
+					<div className="col">
 						<i className="fa fa-trash" />
 					</div>
 				</div>

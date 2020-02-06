@@ -30,21 +30,22 @@ export const Minutas = props => {
 						<h4>{props.date}</h4>
 					</div>
 					<div className="col-3 text-center text-sm-left">
-						<Link className="btn btn-outline-info p-0 border-0" to={"/memodetails/" + ""}>
-							<h4>{props.title}</h4>
-						</Link>
+						<h4>{props.title}</h4>
 					</div>
 					<div className="col-3 text-center text-sm-left">
 						<h4>{props.description}</h4>
 					</div>
 					<div className="col-3 text-center items-center">
-						<button
-							type="button"
-							className="btn"
-							data-toggle="modal"
-							data-target={"#exampleModal" + props.id}>
-							<i className="far fa-edit" />
-						</button>
+						<Link className="btn btn-outline-info p-0 border-0" to={"/memodetails/" + ""}>
+							<button
+								type="button"
+								className="btn"
+								//data-toggle="modal"
+								//data-target={"#exampleModal" + props.id}
+							>
+								<i className="far fa-edit" />
+							</button>
+						</Link>
 						<button className="btn" onClick={() => actions.onDelete(props.id)}>
 							<i className="fas fa-trash" />
 						</button>

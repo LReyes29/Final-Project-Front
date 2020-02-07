@@ -7,36 +7,21 @@ import { Context } from "./../store/appContext";
 export const Minutas = props => {
 	const { store, actions, setStore } = useContext(Context);
 
-	const [state, setState] = useState({
-		//initialize state here
-		date: props.date,
-		title: props.title,
-		description: props.description,
-		duration: props.duration,
-		topics_num: props.topics_num
-	});
-
-	function onTransit(e, name) {
-		const data = Object.assign({}, state);
-		data[name] = e.target.value;
-		setState(data);
-	}
-
 	return (
 		<>
 			<li className="list-group-item p-1">
 				<div className="row w-100">
 					<div className="col-3 text-center text-sm-left">
-						<h4>{props.date}</h4>
+						<h4>{props.user_memo.meeting_date}</h4>
 					</div>
 					<div className="col-3 text-center text-sm-left">
-						<h4>{props.title}</h4>
+						<h4>{props.user_memo.title}</h4>
 					</div>
 					<div className="col-3 text-center text-sm-left">
-						<h4>{props.description}</h4>
+						<h4>{props.user_memo.description}</h4>
 					</div>
 					<div className="col-3 text-center items-center">
-						<Link className="btn btn-outline-info p-0 border-0" to={"/memodetails/" + ""}>
+						<Link className="btn btn-outline-info p-0 border-0" to={"/memodetails/" + props.user_memo.id}>
 							<button
 								type="button"
 								className="btn"
@@ -46,17 +31,20 @@ export const Minutas = props => {
 								<i className="far fa-edit" />
 							</button>
 						</Link>
-						<button className="btn" onClick={() => actions.onDelete(props.id)}>
+						<button className="btn" onClick={() => actions.onDelete(props.user_memo.id)}>
 							<i className="fas fa-trash" />
 						</button>
-						<button className="btn" onClick={() => actions.onSend(props.id)}>
+						<button
+							className="btn"
+							// onClick={() => actions.onSend(state.id)} QUEDARÁ PENDIENTE DE IMPLEMENTAR
+						>
 							<i className="far fa-paper-plane" />
 						</button>
 					</div>
 				</div>
 			</li>
 
-			<div
+			{/* <div
 				className="modal fade"
 				id={"exampleModal" + props.id}
 				tabIndex="-1"
@@ -120,7 +108,7 @@ export const Minutas = props => {
 						</div>
 					</div>
 				</div>
-			</div>
+			</div> */}
 		</>
 	);
 };

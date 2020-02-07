@@ -4,9 +4,10 @@ import { Minutas } from "../component/minutas.js";
 import "../../styles/home.scss";
 import { Context } from "./../store/appContext";
 
-export const Principal = () => {
+export const Principal = props => {
 	const { store, actions } = useContext(Context);
-	const [state, setState] = useState({});
+	// const [state, setState] = useState({
+	// });
 
 	useEffect(() => {
 		//actions.getMinutas("#" + props.match.params.id);
@@ -60,20 +61,11 @@ export const Principal = () => {
 				<div className="row">
 					<div className="col-12" aria-expanded="true">
 						<ul className="list-group pull-down" id="minuta-list">
-							{store.minutas.map((item, i) => {
-								return (
-									<Minutas
-										id={item.id}
-										date={item.date}
-										title={item.title}
-										description={item.description}
-										duration={item.duration}
-										topics_num={item.topics_num}
-										key={i}
-										index={i}
-									/>
-								);
-							})}
+							{store.meetings.user_id == 1 && store.meetings.id == 1 // COMO CONDICIONAR EL MAP AL USUARIO ACTIVO => props.user_id?
+								? store.meetings.map((item, i) => {
+										return <Minutas user_memo={item} key={i} index={i} />;
+								  })
+								: ""}
 						</ul>
 					</div>
 				</div>

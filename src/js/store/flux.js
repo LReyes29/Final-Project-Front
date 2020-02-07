@@ -1,54 +1,89 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			minutas: [
+			users: [
 				{
-					id: "1",
-					date: "04-02-2020",
-					title: "test1",
-					description: "test1_description",
-					duration: "1",
-					topics_num: "1"
+					id: 1,
+					fullname: "Luis Reyes",
+					password: "123456",
+					meeting_num: 1
 				},
 				{
-					id: "2",
-					date: "05-02-2020",
-					title: "test2",
-					description: "test2_description",
-					duration: "2",
-					topics_num: "2"
+					id: 2,
+					fullname: "Joaquin Silva",
+					password: "123456",
+					meeting_num: 1
+				}
+			],
+			meetings: [
+				{
+					id: 1,
+					user_id: 1,
+					admin: "Luis Reyes",
+					create_date: "01-02-2020",
+					meeting_date: "23-03-2020",
+					meeting_hour: "14:30 pm",
+					project_name: "Proyecto1",
+					title: "Reunion RRHH",
+					topics: [
+						{
+							id: 1,
+							meeting_id: 1,
+							title: "Tema1",
+							priority: "",
+							index: 1,
+							matter: "Revisión area comercial",
+							notes: "todo okey",
+							tracking: "Roman",
+							duration: "30"
+						},
+						{
+							id: 2,
+							meeting_id: 1,
+							title: "Tema2",
+							priority: "",
+							index: 2,
+							matter: "Revisión área financiera",
+							notes: "todo okey",
+							tracking: "Julian",
+							duration: "45"
+						}
+					],
+					guest_names: ["Roman", "Julian", "Veronica"],
+					guest_emails: ["roman@gmail.com", "julian@gmail.com", "vero@gmail.com"],
+					guest_colors: ["red", "blue", "yellow"],
+					place: "Sala Reuniones",
+					description: "Revisión sueldos empleados planta Quilicura",
+					target: "Reajuste Sueldos"
 				},
 				{
-					id: "3",
-					date: "06-02-2020",
-					title: "test3",
-					description: "test3_description",
-					duration: "3",
-					topics_num: "3"
-				},
-				{
-					id: "4",
-					date: "07-02-2020",
-					title: "test4",
-					description: "test4_description",
-					duration: "4",
-					topics_num: "4"
-				},
-				{
-					id: "5",
-					date: "08-02-2020",
-					title: "test3",
-					description: "test3_description",
-					duration: "3",
-					topics_num: "3"
-				},
-				{
-					id: "6",
-					date: "09-02-2020",
-					title: "test4",
-					description: "test4_description",
-					duration: "4",
-					topics_num: "4"
+					id: 2,
+					user_id: 2,
+					admin: "Joaquin Silva",
+					create_date: "01-01-2020",
+					meeting_date: "23-03-2020",
+					meeting_hour: "12:30 pm",
+					project_name: "Proyecto2",
+					title: "Reunion Finanzas",
+					topics: [
+						{
+							id: 1,
+							meeting_id: 2,
+							title: "Tema1",
+							priority: "",
+							index: 1,
+							matter: "Balances 2019",
+							notes: "todo okey",
+							tracking: "Roman",
+							duration: "25"
+						}
+					],
+					guest_names: ["Rodrigo", "Pablo", "Johanna"],
+					guest_emails: ["rodrigo@gmail.com", "pablo@gmail.com", "johanna@gmail.com"],
+					guest_colors: ["red", "blue", "yellow"],
+					place: "Sala Principal",
+					description: "Revisión balance y EERR año 2019",
+					target: "Enviar a consultoría externa la próxima semana"
 				}
 			]
 		},
@@ -80,7 +115,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			getMinutas: url => {
 				fetch(url)
 					.then(resp => resp.json())
-					.then(data => setStore({ data: data }));
+					.then(data => setStore({ data }));
 			},
 
 			onCreate: data => {
@@ -117,6 +152,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.then(resp => resp.json())
 					.then(() => getActions().getMinutas("#"));
 			}
+			// onSend: id => {
+			// }
 		}
 	};
 };

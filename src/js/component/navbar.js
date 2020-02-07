@@ -6,7 +6,7 @@ export const Navbar = () => {
 	const { store, actions } = useContext(Context);
 
 	return (
-		<div className="container">
+		<div className="container-fluid">
 			<nav
 				className="navbar navbar-light navbar-expand-md navigation-clean"
 				style={{ backgroundColor: "#192a56" }}>

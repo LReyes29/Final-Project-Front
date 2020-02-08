@@ -5,23 +5,65 @@ const getState = ({ getStore, getActions, setStore }) => {
 				{
 					id: 1,
 					fullname: "Luis Reyes",
+					email: "luis@gmail.com",
 					password: "123456",
 					meeting_num: 1
 				},
 				{
 					id: 2,
 					fullname: "Joaquin Silva",
+					email: "joaquin@gmail.com",
 					password: "123456",
 					meeting_num: 1
 				}
 			],
 			meetings: [
 				{
+					id: 2,
+					user_id: 1,
+					admin: "Luis Reyes",
+					create_date: "03-01-2020",
+					meeting_date: "25-01-2020",
+					meeting_hour: "11:30 am",
+					project_name: "Proyecto2",
+					title: "Reunion Operaciones",
+					topics: [
+						{
+							id: 1,
+							meeting_id: 1,
+							title: "Tema1",
+							priority: "",
+							index: 1,
+							matter: "Revisión area comercial",
+							notes: "todo okey",
+							tracking: "Roman",
+							duration: 30
+						},
+						{
+							id: 2,
+							meeting_id: 1,
+							title: "Tema2",
+							priority: "",
+							index: 2,
+							matter: "Revisión área financiera",
+							notes: "todo okey",
+							tracking: "Julian",
+							duration: 45
+						}
+					],
+					guest_names: ["Roman", "Julian", "Veronica"],
+					guest_emails: ["roman@gmail.com", "julian@gmail.com", "vero@gmail.com"],
+					guest_roles: ["reemplazo", "coordinador", "oyente"],
+					place: "Sala Reuniones",
+					description: "Revisión carga de camiones",
+					target: "Reajuste Sueldos"
+				},
+				{
 					id: 1,
 					user_id: 1,
 					admin: "Luis Reyes",
 					create_date: "01-02-2020",
-					meeting_date: "23-03-2020",
+					meeting_date: "15-03-2020",
 					meeting_hour: "14:30 pm",
 					project_name: "Proyecto1",
 					title: "Reunion RRHH",
@@ -35,7 +77,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 							matter: "Revisión area comercial",
 							notes: "todo okey",
 							tracking: "Roman",
-							duration: "30"
+							duration: 25
 						},
 						{
 							id: 2,
@@ -46,12 +88,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 							matter: "Revisión área financiera",
 							notes: "todo okey",
 							tracking: "Julian",
-							duration: "45"
+							duration: 15
 						}
 					],
 					guest_names: ["Roman", "Julian", "Veronica"],
 					guest_emails: ["roman@gmail.com", "julian@gmail.com", "vero@gmail.com"],
-					guest_colors: ["red", "blue", "yellow"],
+					guest_roles: ["traductor", "oyente", "oyente"],
 					place: "Sala Reuniones",
 					description: "Revisión sueldos empleados planta Quilicura",
 					target: "Reajuste Sueldos"
@@ -75,12 +117,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 							matter: "Balances 2019",
 							notes: "todo okey",
 							tracking: "Roman",
-							duration: "25"
+							duration: 35
 						}
 					],
 					guest_names: ["Rodrigo", "Pablo", "Johanna"],
 					guest_emails: ["rodrigo@gmail.com", "pablo@gmail.com", "johanna@gmail.com"],
-					guest_colors: ["red", "blue", "yellow"],
+					guest_roles: ["practicante", "relator", "resumidor"],
 					place: "Sala Principal",
 					description: "Revisión balance y EERR año 2019",
 					target: "Enviar a consultoría externa la próxima semana"

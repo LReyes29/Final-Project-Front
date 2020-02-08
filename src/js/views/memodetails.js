@@ -1,4 +1,8 @@
 import React, { useState, useContext, useEffect } from "react";
+
+import ReactDOM from "react-dom";
+import Countdown from "react-countdown-now";
+
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { Temas } from "../component/temas.js";
@@ -26,9 +30,9 @@ export const MemoDetails = props => {
 				priority: "",
 				index: 1,
 				matter: "Revisión area comercial",
-				notes: "todo okey",
-				tracking: "Roman",
-				duration: "30"
+				notes: "",
+				tracking: "",
+				duration: 30
 			},
 			{
 				id: 2,
@@ -37,21 +41,43 @@ export const MemoDetails = props => {
 				priority: "",
 				index: 2,
 				matter: "Revisión área financiera",
-				notes: "todo okey",
-				tracking: "Julian",
-				duration: "45"
+				notes: "",
+				tracking: "",
+				duration: 45
 			}
 		],
 		guest_names: ["Roman", "Julian", "Veronica"],
 		guest_emails: ["roman@gmail.com", "julian@gmail.com", "vero@gmail.com"],
-		guest_colors: ["red", "blue", "yellow"],
+		guest_roles: ["reemplazo", "coordinador", "oyente"],
 		place: "Sala Reuniones",
 		description: "Revisión sueldos empleados planta Quilicura",
 		target: "Reajuste Sueldos"
 	});
 
-	const resp = actions.getFetch("#" + props.match.params.id);
-	resp.then(resp => resp.json()).then(data => setState(data));
+	const [time, setTime] = useState(0);
+
+	// function getFetch{
+	// 	url => {
+	// 		fetch(url)
+	// 			.then(resp => resp.json())
+	// 			.then(data => setState({ data }));
+	// 	}
+	// }
+
+	useEffect(() => {
+		// 	getFetch("#" + props.match.params.id);
+
+		let sum_time = 0;
+		if (!!state.topics) {
+			state.topics.forEach(item => {
+				//CONDICIONAR EL forEach AL CURRENT USER y AL CURRENT MEETING
+				sum_time += item.duration;
+			});
+			setTime(sum_time);
+		}
+	}, []);
+
+	// REVISAR TODAS LAS FUNCIONES A CONTINUACIÓN Y LAS DEL ACTIONS
 
 	function onUpdate(e, name) {
 		const data = Object.assign({}, state);
@@ -65,17 +91,20 @@ export const MemoDetails = props => {
 	}
 
 	function onUpdateTopic(id, e, name) {
-		const element = state.topics.find((item, i) => {
-			item.id == id ? item : "";
+		const index = state.topics.findIndex((item, i) => {
+			return item.id == id;
 		});
-		element[name] = e.target.value;
+
+		const data = Object.assign({}, state.topics[index]);
+		data[name] = e.target.value;
 		setState(data);
 	}
 
 	function onDeleteTopic(id) {
-		const index = state.topics.find((item, i) => {
-			item.id == id ? i : "";
+		const index = state.topics.findIndex((item, i) => {
+			return item.id == id;
 		});
+
 		const topics_copy = state.topics.slice();
 		topics_copy.splice(index, 1);
 		setState((state.topics = topics_copy));
@@ -122,7 +151,7 @@ export const MemoDetails = props => {
 								</label>
 								<div className="col-sm-8">
 									<input
-										type="date"
+										type="text"
 										onChange={e => onUpdate(e, "meeting_date")}
 										className="form-control"
 										value={state.meeting_date}
@@ -136,7 +165,7 @@ export const MemoDetails = props => {
 								</label>
 								<div className="col-sm-8">
 									<input
-										type="date"
+										type="text"
 										onChange={e => onUpdate(e, "meeting_hour")}
 										className="form-control"
 										value={state.meeting_hour}
@@ -174,19 +203,35 @@ export const MemoDetails = props => {
 							</div>
 						</form>
 					</div>
-					{/* AGREGAR FUNCION COUNTDOWN */}
-					<div
-						className="col-6 d-flex justify-content-center d-flex align-items-center"
-						style={{ padding: "0px" }}>
-						<div>
-							<h4>Espacio del Reloj</h4>
-							<img className="d-flex justify-content-lg-center" />
-							<button className="btn btn-primary" type="button" style={{ margin: "5px" }}>
+					{/* PROGRAMAR START Y PAUSE */}
+					<div className="col-6" style={{ padding: "0px" }}>
+						<div className="d-block d-flex justify-content-center mt-5 pt-5">
+							<h2>Tiempo restante:</h2>
+						</div>
+						<div className="d-block d-flex justify-content-center">
+							<h1>
+								<Countdown
+									id="meeting_counter"
+									date={Date.now() + time * 60 * 1000}
+									autoStart={false}
+									onPause={() => {
+										return alert("La reunión se ha pausado");
+									}}
+									OnComplete={() => {
+										return alert(
+											"La reunión se ha terminado, Muchas gracias por su asistencia. Hasta la Próxima !"
+										);
+									}}
+								/>
+							</h1>
+
+							{/* <img className="d-flex justify-content-lg-center" />
+							<button className="btn btn-primary" type="button" onClick={() => } style={{ margin: "5px" }}>
 								Comenzar
 							</button>
-							<button className="btn btn-danger" type="button">
+							<button className="btn btn-danger" type="button" onClick={() => }>
 								Pausar
-							</button>
+							</button> */}
 						</div>
 					</div>
 				</div>
@@ -197,37 +242,40 @@ export const MemoDetails = props => {
 					<div className="col">
 						<h4 className="justify-content-center align-content-center">Participantes</h4>
 						<ul className="list-group">
-							{state.guest_names.map((item, i) => {
-								return (
-									<li className="list-group-item" key={i}>
-										<span>{item}</span>
-									</li>
-								);
-							})}
+							{!!state.guest_names &&
+								state.guest_names.map((item, i) => {
+									return (
+										<li className="list-group-item" key={i}>
+											<span>{item}</span>
+										</li>
+									);
+								})}
 						</ul>
 					</div>
 					<div className="col">
 						<h4>Correos</h4>
 						<ul className="list-group">
-							{state.guest_emails.map((item, i) => {
-								return (
-									<li className="list-group-item" key={i}>
-										<span>{item}</span>
-									</li>
-								);
-							})}
+							{!!state.guest_emails &&
+								state.guest_emails.map((item, i) => {
+									return (
+										<li className="list-group-item" key={i}>
+											<span>{item}</span>
+										</li>
+									);
+								})}
 						</ul>
 					</div>
 					<div className="col">
-						<h4>Color Asignado</h4>
+						<h4>Roles</h4>
 						<ul className="list-group">
-							{state.guest_colors.map((item, i) => {
-								return (
-									<li className="list-group-item" key={i}>
-										<span>{item}</span>
-									</li>
-								);
-							})}
+							{!!state.guest_roles &&
+								state.guest_roles.map((item, i) => {
+									return (
+										<li className="list-group-item" key={i}>
+											<span>{item}</span>
+										</li>
+									);
+								})}
 						</ul>
 					</div>
 				</div>
@@ -238,10 +286,10 @@ export const MemoDetails = props => {
 					<div className="col-12" style={{ paddingRight: "5px", paddingLeft: "5px" }}>
 						<form>
 							<div className="form-group row">
-								<label htmlFor="inputDescription" className="col-sm-3 col-form-label">
+								<label htmlFor="inputDescription" className="col-sm-2 col-form-label">
 									Descripción:
 								</label>
-								<div className="col-sm-9">
+								<div className="col-sm-10">
 									<input
 										type="text"
 										onChange={e => onUpdate(e, "description")}
@@ -252,10 +300,10 @@ export const MemoDetails = props => {
 								</div>
 							</div>
 							<div className="form-group row">
-								<label htmlFor="inputTarget" className="col-sm-3 col-form-label">
+								<label htmlFor="inputTarget" className="col-sm-2 col-form-label">
 									Objetivo:
 								</label>
-								<div className="col-sm-9">
+								<div className="col-sm-10">
 									<input
 										type="text"
 										onChange={e => onUpdate(e, "target")}
@@ -270,10 +318,10 @@ export const MemoDetails = props => {
 				</div>
 			</div>
 
-			<div className="container" style={{ marginTop: "14px", padding: "0px" }}>
-				<h4>Revisión Temas:</h4>
-				<div className="row" style={{ margin: "0px" }}>
-					<ul className="list-group pull-down" id="minuta-list">
+			<div className="container" style={{ padding: "5px" }}>
+				<h4>Revisión de Temas:</h4>
+				<div className="row" style={{ margin: "0px", marginTop: "20px" }}>
+					<div className="col">
 						{state.topics.map((item, i) => {
 							return (
 								<Temas
@@ -286,35 +334,30 @@ export const MemoDetails = props => {
 								/>
 							);
 						})}
-					</ul>
+					</div>
 				</div>
 				<div className="row" style={{ margin: "0px" }}>
-					<div className="col-2">
-						<Collapse
-							metting_id={state.topics.meeting_id}
-							index={state.topics.length()}
-							create={onCreateTopic}
-							delete={onDeleteTopic}
-						/>
+					<div className="col">
+						<Collapse metting_id={state.topics.meeting_id} create={onCreateTopic} delete={onDeleteTopic} />
 					</div>
 				</div>
 			</div>
+
 			<div className="row" style={{ margin: "0px", marginLeft: "0px", marginTop: "20px" }}>
 				<div className="col d-flex justify-content-center">
-					<Link className="btn btn-danger mt-3" to="/principal" style={{ padding: "8px" }}>
+					<Link className="btn btn-danger mt-3" to="/principal">
 						Volver
 					</Link>
-					<button
-						className="btn btn-success mt-3"
-						//onClick={() => save(state, props.index)}
-						type="button"
-						onClick={() => actions.onUpdate(state)}>
-						style=
-						{{ padding: "8px", marginLeft: "10px" }}>
-						<Link className="" to="/principal" style={{ padding: "8px" }}>
+					<Link className="" to="/principal">
+						<button
+							className="btn btn-success mt-3"
+							//onClick={() => save(state, props.index)}
+							type="button"
+							onClick={() => actions.onUpdate(state)}
+							style={{ marginLeft: "10px" }}>
 							Guardar
-						</Link>
-					</button>
+						</button>
+					</Link>
 				</div>
 			</div>
 		</>

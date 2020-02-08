@@ -36,7 +36,7 @@ export const Minutas = props => {
 						</button>
 						<button
 							className="btn"
-							// onClick={() => actions.onSend(state.id)} QUEDARÁ PENDIENTE DE IMPLEMENTAR
+							// onClick={() => actions.onSend(state.id)} // ESTA FUNCION QUEDARÁ PENDIENTE DE IMPLEMENTAR
 						>
 							<i className="far fa-paper-plane" />
 						</button>

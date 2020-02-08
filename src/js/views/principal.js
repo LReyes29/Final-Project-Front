@@ -35,10 +35,13 @@ export const Principal = props => {
 						</span>
 					</div>
 					<div className="col-4" />
-					<div className="col-4">
-						<button type="button" className="btn btn-outline-dark float-right">
-							Abrir última minuta
-						</button>
+					<div className="col-4 d-flex justify-content-end">
+						{/* COMO SELECCIONAR LA ULTIMA MINUTA GUARDADA A CONTINUACIÓN? */}
+						<Link className="btn p-0 border-0" to={"/memodetails/" + ""}>
+							<button type="button" className="btn btn-outline-dark">
+								Abrir última minuta
+							</button>
+						</Link>
 					</div>
 				</div>
 			</div>
@@ -61,11 +64,13 @@ export const Principal = props => {
 				<div className="row">
 					<div className="col-12" aria-expanded="true">
 						<ul className="list-group pull-down" id="minuta-list">
-							{store.meetings.user_id == 1 && store.meetings.id == 1 // COMO CONDICIONAR EL MAP AL USUARIO ACTIVO => props.user_id?
-								? store.meetings.map((item, i) => {
+							{!!store.meetings &&
+								store.meetings.map((item, i) => {
+									if (item.user_id == 1) {
+										//CONDICIONAR EL MAP AL CURRENT USER EN VEZ DE 1
 										return <Minutas user_memo={item} key={i} index={i} />;
-								  })
-								: ""}
+									}
+								})}
 						</ul>
 					</div>
 				</div>

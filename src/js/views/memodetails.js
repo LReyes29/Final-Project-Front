@@ -1,12 +1,11 @@
 import React, { useState, useContext, useEffect } from "react";
 
 import ReactDOM from "react-dom";
-import Countdown from "react-countdown-now";
+import Countdown, { zeroPad } from "react-countdown-now";
 
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { Temas } from "../component/temas.js";
-import { Collapse } from "../component/collapseTopics.js";
 import "../../styles/home.scss";
 import { Context } from "../store/appContext";
 
@@ -28,9 +27,8 @@ export const MemoDetails = props => {
 				meeting_id: 1,
 				title: "Tema1",
 				priority: "",
-				index: 1,
-				matter: "Revisión area comercial",
-				notes: "",
+				notes: "Area comercial debe revisar",
+				care: "Roberto Jara",
 				tracking: "",
 				duration: 30
 			},
@@ -39,9 +37,8 @@ export const MemoDetails = props => {
 				meeting_id: 1,
 				title: "Tema2",
 				priority: "",
-				index: 2,
-				matter: "Revisión área financiera",
-				notes: "",
+				notes: "Supervisión jefe de planta",
+				care: "Alicia Pacheco",
 				tracking: "",
 				duration: 45
 			}
@@ -54,7 +51,19 @@ export const MemoDetails = props => {
 		target: "Reajuste Sueldos"
 	});
 
+	const [topic, setTopic] = useState({
+		id: "",
+		meeting_id: state.id,
+		title: "",
+		priority: "",
+		notes: "",
+		care: "",
+		tracking: "",
+		duration: 0
+	});
+
 	const [time, setTime] = useState(0);
+	const [clockRef, setClockRef] = useState(null);
 
 	// function getFetch{
 	// 	url => {
@@ -77,37 +86,59 @@ export const MemoDetails = props => {
 		}
 	}, []);
 
-	// REVISAR TODAS LAS FUNCIONES A CONTINUACIÓN Y LAS DEL ACTIONS
+	function start() {
+		clockRef.start();
+	}
+
+	function pause() {
+		clockRef.pause();
+	}
 
 	function onUpdate(e, name) {
-		const data = Object.assign({}, state);
-		data[name] = e.target.value;
-		setState(data);
+		const copy_array = Object.assign({}, state);
+		copy_array[name] = e.target.value;
+		setState(copy_array);
+	}
+
+	function onUpdate2(e, name) {
+		const copy_array = Object.assign({}, topic);
+		copy_array[name] = e.target.value;
+		setTopic(copy_array);
 	}
 
 	function onCreateTopic(data) {
-		//const data = Object.assign({}, state.topics);
-		setState((state.topics = state.topics.push(data)));
+		const copy_array = Object.assign({}, state);
+		copy_array.topics.push(data);
+		setState(copy_array);
+		// SE DEBE HACER UN FETCH POST Y LUEGO FETCH GET PARA QUE DEVUELVA EL NUEVO TOPIC CON UN ID ASIGNADO
 	}
 
-	function onUpdateTopic(id, e, name) {
+	function onUpdateTopic(id, data) {
+		const copy_array = Object.assign({}, state);
 		const index = state.topics.findIndex((item, i) => {
 			return item.id == id;
 		});
-
-		const data = Object.assign({}, state.topics[index]);
-		data[name] = e.target.value;
-		setState(data);
+		copy_array.topics[index] = data;
+		setState(copy_array);
 	}
-
 	function onDeleteTopic(id) {
+		const copy_array = Object.assign({}, state);
 		const index = state.topics.findIndex((item, i) => {
 			return item.id == id;
 		});
+		// CUANDO OCUPO ESTA FUNCION, A PESAR QUE ELIMINA CORRECTAMENTE, EL COMPONENTE TEMAS RENDERIZA MAL
+		copy_array.topics.splice(index, 1);
+		setState(copy_array);
+		console.log(state.topics);
+	}
 
-		const topics_copy = state.topics.slice();
-		topics_copy.splice(index, 1);
-		setState((state.topics = topics_copy));
+	function alreadyChecked(id) {
+		for (var i = 0; i < state.topics.length; i++) {
+			if (state.topics[i].id == id) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	return (
@@ -203,7 +234,6 @@ export const MemoDetails = props => {
 							</div>
 						</form>
 					</div>
-					{/* PROGRAMAR START Y PAUSE */}
 					<div className="col-6" style={{ padding: "0px" }}>
 						<div className="d-block d-flex justify-content-center mt-5 pt-5">
 							<h2>Tiempo restante:</h2>
@@ -212,10 +242,12 @@ export const MemoDetails = props => {
 							<h1>
 								<Countdown
 									id="meeting_counter"
-									date={Date.now() + time * 60 * 1000}
+									date={Date.now() + time * 60000}
+									ref={ref => setClockRef(ref)}
 									autoStart={false}
+									daysInHours
 									onPause={() => {
-										return alert("La reunión se ha pausado");
+										return alert("La reunión se encuentra detenida");
 									}}
 									OnComplete={() => {
 										return alert(
@@ -224,14 +256,22 @@ export const MemoDetails = props => {
 									}}
 								/>
 							</h1>
-
-							{/* <img className="d-flex justify-content-lg-center" />
-							<button className="btn btn-primary" type="button" onClick={() => } style={{ margin: "5px" }}>
-								Comenzar
+						</div>
+						<div className="d-block d-flex justify-content-lg-center">
+							<button
+								className="btn btn-success"
+								type="button"
+								onClick={() => start()}
+								style={{ margin: "5px" }}>
+								Iniciar
 							</button>
-							<button className="btn btn-danger" type="button" onClick={() => }>
+							<button
+								className="btn btn-danger"
+								type="button"
+								onClick={() => pause()}
+								style={{ margin: "5px" }}>
 								Pausar
-							</button> */}
+							</button>
 						</div>
 					</div>
 				</div>
@@ -325,33 +365,124 @@ export const MemoDetails = props => {
 						{state.topics.map((item, i) => {
 							return (
 								<Temas
-									id={item.id}
-									meeting_topic={item}
+									item={item}
 									key={i}
-									index={i}
 									update={onUpdateTopic}
 									delete={onDeleteTopic}
+									checked={alreadyChecked}
 								/>
 							);
 						})}
-					</div>
-				</div>
-				<div className="row" style={{ margin: "0px" }}>
-					<div className="col">
-						<Collapse metting_id={state.topics.meeting_id} create={onCreateTopic} delete={onDeleteTopic} />
+
+						<li className="list-group-item p-1">
+							<div className="row w-100 m-0">
+								<div className="col-md-2 px-0">
+									<label>Título</label>
+								</div>
+								<div className="col-md-1 d-flex justify-content-center px-0">
+									<label>Prioridad</label>
+								</div>
+								<div className="col-md-4 pl-0">
+									<label>Notas</label>
+								</div>
+								<div className="col-md-2 px-0">
+									<label>Responsable</label>
+								</div>
+								<div className="col-md-2">
+									<label>Seguimiento</label>
+								</div>
+								<div className="col-md-1" />
+							</div>
+							<div className="row w-100 m-0">
+								<div className="col-md-2 px-0">
+									<input type="text" value={topic.title} onChange={e => onUpdate2(e, "title")} />
+								</div>
+								<div className="col-md-1 d-flex align-item-center d-flex justify-content-center px-0">
+									<select value={topic.priority} onChange={e => onUpdate2(e, "priority")}>
+										<option value="" selected="" />
+										<option value="Alta">Alta</option>
+										<option value="Media">Media</option>
+										<option value="Baja">Baja</option>
+									</select>
+								</div>
+								<div className="col-md-4 pl-0">
+									<input
+										type="text"
+										value={topic.notes}
+										onChange={e => onUpdate2(e, "notes")}
+										style={{ width: "100%" }}
+									/>
+								</div>
+								<div className="col-md-2 px-0">
+									<input type="text" value={topic.care} onChange={e => onUpdate2(e, "care")} />
+								</div>
+								<div className="col-md-2">
+									<input
+										type="date"
+										value={topic.tracking}
+										onChange={e => onUpdate2(e, "tracking")}
+									/>
+								</div>
+								<div className="col-md-1">
+									<i
+										//REVISAR CONDICION, DEBIERA SER MEJOR CUANDO LE HAGO CLICK, NO CUANDO YA ESTÁ EN EL STATE
+										className={"fas fa-check" + (alreadyChecked(topic.id) ? "-double" : "")}
+										style={{ paddingLeft: "7px" }}
+										onClick={() => {
+											onCreateTopic(topic);
+											setTopic({
+												id: "",
+												meeting_id: state.topics.meeting_id,
+												title: "",
+												priority: "",
+												notes: "",
+												care: "",
+												tracking: "",
+												duration: 0
+											});
+										}}
+									/>{" "}
+									<i
+										className="fa fa-trash"
+										style={{ paddingLeft: "7px", paddingRight: "5px" }}
+										onClick={() => {
+											onDeleteTopic(topic.id);
+										}}
+									/>
+								</div>
+							</div>
+						</li>
+						<button
+							type="button"
+							className="btn btn-outline-info float-right mt-2"
+							onClick={() => {
+								//ESTA BIEN QUE COMPRUEBE PRIMERO SI EL TEMA ACTUAL YA SE CREÓ?, SINO PARA GUARDARLO AHORA.
+								alreadyChecked(topic.id) ? "" : onCreateTopic(topic);
+								setTopic({
+									id: "",
+									meeting_id: state.id,
+									title: "",
+									priority: "",
+									notes: "",
+									care: "",
+									tracking: "",
+									duration: 0
+								});
+							}}>
+							<i className="fa fa-plus" />
+						</button>
 					</div>
 				</div>
 			</div>
 
 			<div className="row" style={{ margin: "0px", marginLeft: "0px", marginTop: "20px" }}>
 				<div className="col d-flex justify-content-center">
-					<Link className="btn btn-danger mt-3" to="/principal">
+					<Link className="btn btn-secondary mt-3" to="/principal">
 						Volver
 					</Link>
 					<Link className="" to="/principal">
 						<button
-							className="btn btn-success mt-3"
-							//onClick={() => save(state, props.index)}
+							className="btn btn-primary mt-3"
 							type="button"
 							onClick={() => actions.onUpdate(state)}
 							style={{ marginLeft: "10px" }}>

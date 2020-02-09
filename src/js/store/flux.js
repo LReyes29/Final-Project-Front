@@ -33,9 +33,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 							meeting_id: 1,
 							title: "Tema1",
 							priority: "",
-							index: 1,
-							matter: "Revisión area comercial",
-							notes: "todo okey",
+							notes: "Revisión area comercial",
+							care: "todo okey",
 							tracking: "Roman",
 							duration: 30
 						},
@@ -44,9 +43,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 							meeting_id: 1,
 							title: "Tema2",
 							priority: "",
-							index: 2,
-							matter: "Revisión área financiera",
-							notes: "todo okey",
+							notes: "Revisión área financiera",
+							care: "todo okey",
 							tracking: "Julian",
 							duration: 45
 						}
@@ -73,9 +71,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 							meeting_id: 1,
 							title: "Tema1",
 							priority: "",
-							index: 1,
-							matter: "Revisión area comercial",
-							notes: "todo okey",
+							notes: "Revisión area comercial",
+							care: "todo okey",
 							tracking: "Roman",
 							duration: 25
 						},
@@ -84,9 +81,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 							meeting_id: 1,
 							title: "Tema2",
 							priority: "",
-							index: 2,
-							matter: "Revisión área financiera",
-							notes: "todo okey",
+							notes: "Revisión área financiera",
+							care: "todo okey",
 							tracking: "Julian",
 							duration: 15
 						}
@@ -113,9 +109,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 							meeting_id: 2,
 							title: "Tema1",
 							priority: "",
-							index: 1,
-							matter: "Balances 2019",
-							notes: "todo okey",
+							notes: "Balances 2019",
+							care: "todo okey",
 							tracking: "Roman",
 							duration: 35
 						}

@@ -13,7 +13,7 @@ export const Navbar = () => {
 				<div className="container">
 					<Link to="/principal">
 						<a className="navbar-brand" href="#" style={{ color: "#f2f5f8" }}>
-							Orkasta
+							ORKASTA
 						</a>
 					</Link>
 					<button data-toggle="collapse" className="navbar-toggler" data-target="#navcol-1">

@@ -74,42 +74,7 @@ export const Home = () => {
 					</div>
 				</div>
 			</div>
-			<div className="py-5">
-				<div className="container">
-					<div className="row">
-						<div className="col-md-12">
-							<ul className="nav nav-tabs">
-								<li className="nav-item">
-									<a href="" className="active nav-link" data-toggle="tab" data-target="#tabone">
-										Tab 1
-									</a>
-								</li>
-								<li className="nav-item">
-									<a className="nav-link" href="" data-toggle="tab" data-target="#tabtwo">
-										Tab 2
-									</a>
-								</li>
-							</ul>
-							<div className="tab-content mt-2">
-								<div className="tab-pane fade show active" id="tabone" role="tabpanel">
-									<p className="">
-										{" "}
-										When I hear the buzz of the little world among the stalks, and grow familiar
-										with the countless indescribable forms.{" "}
-									</p>
-								</div>
-								<div className="tab-pane fade" id="tabtwo" role="tabpanel">
-									<p className="">
-										{" "}
-										Who formed us in his own image, and the breath of that universal love which
-										bears and sustains us. And then, my friend.{" "}
-									</p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+
 			<script
 				src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
 				integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

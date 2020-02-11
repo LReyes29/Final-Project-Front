@@ -129,7 +129,6 @@ export const MemoDetails = props => {
 		// CUANDO OCUPO ESTA FUNCION, A PESAR QUE ELIMINA CORRECTAMENTE, EL COMPONENTE TEMAS RENDERIZA MAL
 		copy_array.topics.splice(index, 1);
 		setState(copy_array);
-		console.log(state.topics);
 	}
 
 	function alreadyChecked(id) {

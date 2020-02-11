@@ -2,7 +2,8 @@ import React, { useContext, useEffect } from "react";
 import "../../styles/landing.css";
 import { Context } from "./../store/appContext";
 import Login from "../component/login.js";
-import Logo from "../../img/logo.jpg";
+import Logo from "../../img/logo.png";
+import favicon from "../../img/favicon.png";
 
 export const Home = () => {
 	return (
@@ -12,7 +13,8 @@ export const Home = () => {
 					<div className="row">
 						<div className="p-5 col-md-7 d-flex flex-column justify-content-center">
 							<h3 className="display-4 mb-3">
-								ORKASTA <img src={Logo} height="60" />
+								<img src={favicon} height="75" />
+								ORKASTA
 							</h3>
 							<p className="mb-4 lead">
 								{" "}
@@ -74,22 +76,6 @@ export const Home = () => {
 					</div>
 				</div>
 			</div>
-
-			<script
-				src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-				integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-				crossOrigin="anonymous"
-			/>
-			<script
-				src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-				integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-				crossOrigin="anonymous"
-			/>
-			<script
-				src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-				integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-				crossOrigin="anonymous"
-			/>
 		</>
 	);
 };

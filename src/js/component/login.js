@@ -1,144 +1,188 @@
 import React, { useState } from "react";
+import { Redirect } from "react-router-dom";
 import "../../styles/landing.css";
+import { Link } from "react-router-dom";
 
-export default function Login(props) {
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-
-	function validateForm() {
-		return email.length > 0 && password.length > 0;
+class Login extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			name: " ",
+			email: " ",
+			password: " ",
+			repeated_pass: " ",
+			red: false
+		};
 	}
 
-	function handleSubmit(event) {
-		event.preventDefault();
-	}
+	handleChange = e => {
+		this.setState({
+			[e.target.name]: e.target.value
+		});
+	};
 
-	return (
-		<div className="col-md-12">
-			<ul className="nav nav-tabs">
-				<li className="nav-item bg-secondary rounded-top">
-					<a href="" className="active nav-link" data-toggle="tab" data-target="#tabone">
-						Login
-					</a>
-				</li>
-				<li className="nav-item bg-secondary rounded-top">
-					<a className="nav-link" href="" data-toggle="tab" data-target="#tabtwo">
-						Register
-					</a>
-				</li>
-			</ul>
-			<div className="tab-content mt-2">
-				<div className="tab-pane fade show active" id="tabone" role="tabpanel">
-					<form>
-						<div className="form-group">
-							<label>Email</label>
-							<input className="form-control" placeholder="Email" required="required" type="email" />
-						</div>
-						<div className="form-group">
-							<label>Password</label>
-							<input
-								type="password"
-								className="form-control"
-								placeholder="Password"
-								required="required"
-							/>
-						</div>
-						<button type="submit" className="btn mt-4 btn-block btn-outline-dark p-2">
+	onSubmitRegister = e => {
+		e.preventDefault();
+		let form = {
+			name: this.state.name,
+			email: this.state.email,
+			password: this.state.password,
+			repeated_pass: this.state.repeated_pass
+		};
+
+		{
+			/* Aqui se manda a la api*/
+		}
+		database.push(form);
+		this.setState({
+			name: "",
+			email: "",
+			password: " ",
+			repeated_pass: " "
+		});
+
+		if (this.state.password) {
+			this.setState({
+				red: true
+			});
+		}
+	};
+
+	onSubmitLogin = e => {
+		let form = {
+			email: this.state.email,
+			password: this.state.password
+		};
+
+		{
+			/* Aqui se manda a la api*/
+		}
+
+		database.push(form);
+		this.setState({
+			email: " ",
+			password: " "
+		});
+		if (this.state.password) {
+			this.setState({
+				red: true
+			});
+		}
+		if (this.state.red) {
+			return <Redirect to="/principal" />;
+		}
+	};
+
+	render() {
+		if (this.state.red) {
+			return <Redirect to="/principal" />;
+		}
+		return (
+			<div className="col-md-12">
+				<ul className="nav nav-tabs pl-5 border-0">
+					<li className="nav-item bg-secondary rounded-top shadow-sm">
+						<a href="" className="nav-link active" data-toggle="tab" data-target="#tabone">
+							Login
+						</a>
+					</li>
+					<li className="nav-item bg-secondary rounded-top text-light shadow-sm">
+						<a className="nav-link" href="" data-toggle="tab" data-target="#tabtwo">
+							Register
+						</a>
+					</li>
+				</ul>
+				<div className="tab-content mt-2">
+					<div className="tab-pane fade show active" id="tabone" role="tabpanel">
+						<h3 className="mb-3">Login</h3>
+						<form>
+							<div className="form-group">
+								<label>Email</label>
+								<input
+									className="form-control"
+									name="email"
+									placeholder="Email"
+									required="required"
+									type="email"
+									onChange={e => this.handleChange(e)}
+								/>
+							</div>
+							<div className="form-group">
+								<label>Password</label>
+								<input
+									type="password"
+									name="password"
+									className="form-control"
+									placeholder="Password"
+									required="required"
+									onChange={e => this.handleChange(e)}
+								/>
+							</div>
+						</form>
+						<button
+							OnClick={e => this.onSubmitLogin(e)}
+							className="btn mt-4 btn-block btn-outline-dark p-2">
 							<b>Login</b>
 						</button>
-					</form>
-				</div>
-				<div className="tab-pane fade" id="tabtwo" role="tabpanel">
-					<form>
-						<div className="form-group">
-							<label>Email</label>
-							<input className="form-control" placeholder="Email" required="required" type="email" />
-						</div>
-						<div className="form-group">
-							<label>Password</label>
-							<input
-								type="password"
-								className="form-control"
-								placeholder="Password"
-								required="required"
-							/>
-						</div>
-						<div className="form-group">
-							<label>Repeat Password</label>
-							<input
-								type="password"
-								className="form-control"
-								placeholder="Repeat Password"
-								required="required"
-							/>
-						</div>
-						<button type="submit" className="btn mt-4 btn-block btn-outline-dark p-2">
+					</div>
+					<div className="tab-pane fade" id="tabtwo" role="tabpanel">
+						<h3 className="mb-3">Register</h3>
+						<form>
+							<div className="form_group">
+								<label>Nombre completo</label>
+								<input
+									className="form-control"
+									placeholder="Nombre completo"
+									required="required"
+									type="text"
+									name="name"
+									onChange={e => this.handleChange(e)}
+								/>
+							</div>
+							<div className="form-group">
+								<label>Email</label>
+								<input
+									className="form-control"
+									name="email"
+									placeholder="Email"
+									required="required"
+									type="email"
+									onChange={e => this.handleChange(e)}
+								/>
+							</div>
+							<div className="form-group">
+								<label>Password</label>
+								<input
+									type="password"
+									className="form-control"
+									placeholder="Password"
+									required="required"
+									name="password"
+									onChange={e => this.handleChange(e)}
+								/>
+							</div>
+							<div className="form-group">
+								<label>Repeat Password</label>
+								<input
+									type="password"
+									className="form-control"
+									placeholder="Repeat Password"
+									required="required"
+									name="repeated_pass"
+									onChange={e => this.handleChange(e)}
+								/>
+							</div>
+						</form>
+						<button
+							type="submit"
+							OnClick={e => this.onSubmitRegister(e)}
+							className="btn mt-4 btn-block btn-outline-dark p-2">
 							<b>Register</b>
 						</button>
-					</form>
+					</div>
 				</div>
 			</div>
-		</div>
-	);
+		);
+	}
 }
 
-// const LoginPage = props => {
-// 	const signupWasClickedCallback = data => {
-// 		console.log(data);
-// 		alert("Signup callback, see log on the console to see the data.");
-// 	};
-// 	const loginWasClickedCallback = data => {
-// 		console.log(data);
-// 		alert("Login callback, see log on the console to see the data.");
-// 	};
-// 	const recoverPasswordWasClickedCallback = data => {
-// 		console.log(data);
-// 		alert("Recover password callback, see log on the console to see the data.");
-//     };
-
-//     const mystyle = {
-//         backgroundColor: "#A8DADC",
-//         border : 0,
-//       };
-
-// 	return (
-// 		<div classNameName="p-5 col-md-5 shadow-lg">
-// 			<ReactSignupLoginComponent
-// 				title="Tu dale"
-// 				handleSignup={signupWasClickedCallback}
-// 				handleLogin={loginWasClickedCallback}
-// 				handleRecoverPassword={recoverPasswordWasClickedCallback}
-// 				styles={{
-// 					mainWrapper: { backgroundColor: "#A8DADC"  },
-
-// 					signup: {
-// 						wrapper: { backgroundColor: "yellow" },
-// 						inputWrapper: { backgroundColor: "AliceBlue" },
-// 						buttonsWrapper: { backgroundColor: "Aqua" },
-// 						input: { backgroundColor: "LavenderBlush" },
-// 						recoverPassword: {},
-// 						button: { backgroundColor: "LightCoral" }
-// 					},
-// 					login: {
-// 						wrapper: { backgroundColor: "yellow" },
-// 						inputWrapper: { backgroundColor: "AliceBlue" },
-// 						buttonsWrapper: { backgroundColor: "Aqua" },
-// 						input: { backgroundColor: "LavenderBlush" },
-// 						recoverPasswordWrapper: { backgroundColor: "MediumBlue" },
-// 						recoverPasswordButton: { backgroundColor: "OldLace " },
-// 						button: { backgroundColor: "LightCoral" }
-// 					},
-// 					recoverPassword: {
-// 						wrapper: { backgroundColor: "yellow" },
-// 						inputWrapper: { backgroundColor: "AliceBlue" },
-// 						buttonsWrapper: { backgroundColor: "Aqua" },
-// 						input: { backgroundColor: "LavenderBlush" },
-// 						button: { backgroundColor: "LightCoral" }
-// 					}
-// 				}}
-// 			/>
-// 		</div>
-// 	);
-// };
-
-// export default LoginPage;
+export default Login;

@@ -6,121 +6,42 @@ const getState = ({ getStore, getActions, setStore }) => {
 					id: 1,
 					fullname: "Luis Reyes",
 					email: "luis@gmail.com",
-					password: "123456",
-					meeting_num: 1
-				},
-				{
-					id: 2,
-					fullname: "Joaquin Silva",
-					email: "joaquin@gmail.com",
-					password: "123456",
-					meeting_num: 1
+					password: "123456"
 				}
 			],
 			meetings: [
 				{
-					id: 2,
-					user_id: 1,
-					admin: "Luis Reyes",
-					create_date: "03-01-2020",
-					meeting_date: "25-01-2020",
-					meeting_hour: "11:30 am",
-					project_name: "Proyecto2",
-					title: "Reunion Operaciones",
-					topics: [
-						{
-							id: 1,
-							meeting_id: 1,
-							title: "Tema1",
-							priority: "",
-							notes: "Revisión area comercial",
-							care: "todo okey",
-							tracking: "Roman",
-							duration: 30
-						},
-						{
-							id: 2,
-							meeting_id: 1,
-							title: "Tema2",
-							priority: "",
-							notes: "Revisión área financiera",
-							care: "todo okey",
-							tracking: "Julian",
-							duration: 45
-						}
-					],
-					guest_names: ["Roman", "Julian", "Veronica"],
-					guest_emails: ["roman@gmail.com", "julian@gmail.com", "vero@gmail.com"],
-					guest_roles: ["reemplazo", "coordinador", "oyente"],
-					place: "Sala Reuniones",
-					description: "Revisión carga de camiones",
-					target: "Reajuste Sueldos"
-				},
-				{
 					id: 1,
 					user_id: 1,
 					admin: "Luis Reyes",
-					create_date: "01-02-2020",
-					meeting_date: "15-03-2020",
-					meeting_hour: "14:30 pm",
-					project_name: "Proyecto1",
-					title: "Reunion RRHH",
-					topics: [
-						{
-							id: 1,
-							meeting_id: 1,
-							title: "Tema1",
-							priority: "",
-							notes: "Revisión area comercial",
-							care: "todo okey",
-							tracking: "Roman",
-							duration: 25
-						},
-						{
-							id: 2,
-							meeting_id: 1,
-							title: "Tema2",
-							priority: "",
-							notes: "Revisión área financiera",
-							care: "todo okey",
-							tracking: "Julian",
-							duration: 15
-						}
-					],
-					guest_names: ["Roman", "Julian", "Veronica"],
-					guest_emails: ["roman@gmail.com", "julian@gmail.com", "vero@gmail.com"],
-					guest_roles: ["traductor", "oyente", "oyente"],
-					place: "Sala Reuniones",
-					description: "Revisión sueldos empleados planta Quilicura",
-					target: "Reajuste Sueldos"
-				},
+					create_date: "10-02-2020",
+					meeting_hour: "16:00 pm",
+					project_name: "tests front-back",
+					title: "test 1",
+					place: "Sala 4geeks",
+					description: "2 weeks to go",
+					target: "terminar final project"
+				}
+			],
+			topics: [
 				{
-					id: 2,
-					user_id: 2,
-					admin: "Joaquin Silva",
-					create_date: "01-01-2020",
-					meeting_date: "23-03-2020",
-					meeting_hour: "12:30 pm",
-					project_name: "Proyecto2",
-					title: "Reunion Finanzas",
-					topics: [
-						{
-							id: 1,
-							meeting_id: 2,
-							title: "Tema1",
-							priority: "",
-							notes: "Balances 2019",
-							care: "todo okey",
-							tracking: "Roman",
-							duration: 35
-						}
-					],
-					guest_names: ["Rodrigo", "Pablo", "Johanna"],
-					guest_emails: ["rodrigo@gmail.com", "pablo@gmail.com", "johanna@gmail.com"],
-					guest_roles: ["practicante", "relator", "resumidor"],
-					place: "Sala Principal",
-					description: "Revisión balance y EERR año 2019",
-					target: "Enviar a consultoría externa la próxima semana"
+					id: 1,
+					meeting_id: 1,
+					title: "title 1",
+					priority: "Alta",
+					notes: "notes 1",
+					care: "care 1",
+					tracking: "tracking",
+					duration: 10
+				}
+			],
+			guests: [
+				{
+					id: 1,
+					meeting_id: 1,
+					fullname: "Camilo Sánchez",
+					email: "camilo@gmail.com",
+					rol: "espectador"
 				}
 			]
 		},

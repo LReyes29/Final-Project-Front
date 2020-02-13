@@ -6,15 +6,13 @@ export const Navbar = () => {
 	const { store, actions } = useContext(Context);
 
 	return (
-		<div className="container-fluid">
+		<div className="container p-0">
 			<nav
 				className="navbar navbar-light navbar-expand-md navigation-clean"
 				style={{ backgroundColor: "#192a56" }}>
 				<div className="container">
-					<Link to="/principal">
-						<a className="navbar-brand" href="#" style={{ color: "#f2f5f8" }}>
-							Orkasta
-						</a>
+					<Link to="/principal" className="navbar-brand" style={{ color: "#f2f5f8" }}>
+						Orkasta
 					</Link>
 					<button data-toggle="collapse" className="navbar-toggler" data-target="#navcol-1">
 						<span className="sr-only">Toggle navigation</span>
@@ -38,25 +36,17 @@ export const Navbar = () => {
 									Cuenta&nbsp;
 								</a>
 								<div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-									<Link to="/principal">
-										<a className="dropdown-item" href="#">
-											Panel Principal
-										</a>
+									<Link to="/principal" className="dropdown-item">
+										Panel Principal
 									</Link>
-									<Link to="/myprofile">
-										<a className="dropdown-item" href="#">
-											Mi Perfil
-										</a>
+									<Link to="/myprofile" className="dropdown-item">
+										Mi Perfil
 									</Link>
-									<Link to="/payment">
-										<a className="dropdown-item" href="#">
-											Pago
-										</a>
+									<Link to="/payment" className="dropdown-item">
+										Pago
 									</Link>
-									<Link to="/">
-										<a className="dropdown-item" href="#">
-											Salir
-										</a>
+									<Link to="/" className="dropdown-item">
+										Salir
 									</Link>
 								</div>
 							</li>

@@ -77,11 +77,6 @@ export const MemoDetails = props => {
 
 	const [time, setTime] = useState(0);
 	const [clockRef, setClockRef] = useState(null);
-	const [flag, setFlag] = useState({
-		flag1: false,
-		flag2: false,
-		flag3: false
-	});
 
 	// function getFetch{
 	// 	url => {
@@ -124,12 +119,6 @@ export const MemoDetails = props => {
 		copy_array[name] = e.target.value;
 		setTopic(copy_array);
 	}
-
-	$("#submit-errors").hide();
-	$("#foo").on("click", function() {
-		console.log("here");
-		$("#submit-errors").show(); //or slideDown() for effect
-	});
 
 	function onCreateTopic(data) {
 		if (data.title) {

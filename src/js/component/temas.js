@@ -5,23 +5,20 @@ import PropTypes from "prop-types";
 import { Context } from "./../store/appContext";
 
 export const Temas = props => {
-	const { store, actions, setStore } = useContext(Context);
+	const [topic, setTopic] = useState(props.item);
 
-	const [topic, setTopic] = useState({
-		id: props.item.id,
-		meeting_id: props.item.meeting_id,
-		title: props.item.title,
-		priority: props.item.priority,
-		notes: props.item.notes,
-		care: props.item.care,
-		tracking: props.item.tracking,
-		duration: props.item.duration
-	});
-
-	function onUpdate(e, name) {
+	function handleChangeTopic(e, name) {
 		const data = Object.assign({}, topic);
+		console.log(data);
 		data[name] = e.target.value;
 		setTopic(data);
+	}
+
+	function alreadyChecked() {
+		if (props.item.title !== "" && props.item.priority !== "") {
+			return true;
+		}
+		return false;
 	}
 
 	return (
@@ -47,10 +44,10 @@ export const Temas = props => {
 				</div>
 				<div className="row w-100 m-0">
 					<div className="col-md-2 px-0">
-						<input type="text" value={topic.title} onChange={e => onUpdate(e, "title")} />
+						<input type="text" value={topic.title} onChange={e => handleChangeTopic(e, "title")} />
 					</div>
 					<div className="col-md-1 d-flex align-item-center d-flex justify-content-center px-0">
-						<select value={topic.priority} onChange={e => onUpdate(e, "priority")}>
+						<select value={topic.priority} onChange={e => handleChangeTopic(e, "priority")}>
 							<option value="" selected="" />
 							<option value="Alta">Alta</option>
 							<option value="Media">Media</option>
@@ -61,20 +58,19 @@ export const Temas = props => {
 						<input
 							type="text"
 							value={topic.notes}
-							onChange={e => onUpdate(e, "notes")}
+							onChange={e => handleChangeTopic(e, "notes")}
 							style={{ width: "100%" }}
 						/>
 					</div>
 					<div className="col-md-2 px-0">
-						<input type="text" value={topic.care} onChange={e => onUpdate(e, "care")} />
+						<input type="text" value={topic.care} onChange={e => handleChangeTopic(e, "care")} />
 					</div>
 					<div className="col-md-2">
-						<input type="date" value={topic.tracking} onChange={e => onUpdate(e, "tracking")} />
+						<input type="date" value={topic.tracking} onChange={e => handleChangeTopic(e, "tracking")} />
 					</div>
 					<div className="col-md-1">
 						<i
-							//REVISAR CONDICION, DEBIERA SER MEJOR CUANDO LE HAGO CLICK, NO CUANDO YA ESTÁ EN EL STATE
-							className={"fas fa-check" + (props.checked(topic.id) ? "-double" : "")}
+							className={"fas fa-check" + (alreadyChecked() ? "-double" : "")}
 							style={{ paddingLeft: "7px" }}
 							onClick={() => {
 								props.update(topic.id, topic);

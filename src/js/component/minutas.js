@@ -7,21 +7,22 @@ import { Context } from "./../store/appContext";
 export const Minutas = props => {
 	const { store, actions, setStore } = useContext(Context);
 
+	//AGREGAR FECHA DE CREACIÓN DE LA REUNION ???????????
 	return (
 		<>
 			<li className="list-group-item p-1">
 				<div className="row w-100">
 					<div className="col-3 text-center text-sm-left">
-						<h4>{props.user_memo.meeting_date}</h4>
+						<h4>{props.memo.meeting_date}</h4>
 					</div>
 					<div className="col-3 text-center text-sm-left">
-						<h4>{props.user_memo.title}</h4>
+						<h4>{props.memo.title}</h4>
 					</div>
 					<div className="col-3 text-center text-sm-left">
-						<h4>{props.user_memo.description}</h4>
+						<h4>{props.memo.description}</h4>
 					</div>
 					<div className="col-3 text-center items-center">
-						<Link className="btn btn-outline-info p-0 border-0" to={"/memodetails/" + props.user_memo.id}>
+						<Link className="btn btn-outline-info p-0 border-0" to={"/memodetails/" + props.memo.id}>
 							<button
 								type="button"
 								className="btn"
@@ -31,7 +32,7 @@ export const Minutas = props => {
 								<i className="far fa-edit" />
 							</button>
 						</Link>
-						<button className="btn" onClick={() => actions.onDelete(props.user_memo.id)}>
+						<button className="btn" onClick={() => actions.onDelete(props.memo.id)}>
 							<i className="fas fa-trash" />
 						</button>
 						<button

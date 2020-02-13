@@ -28,7 +28,7 @@ export const MemoDetails = props => {
 				title: "Tema1",
 				priority: "",
 				notes: "Area comercial debe revisar",
-				care: "Roberto Jara",
+				care: "Roberto Soto",
 				tracking: "",
 				duration: 30
 			},
@@ -37,15 +37,28 @@ export const MemoDetails = props => {
 				meeting_id: 1,
 				title: "Tema2",
 				priority: "",
-				notes: "Supervisión jefe de planta",
-				care: "Alicia Pacheco",
+				notes: "",
+				care: "",
 				tracking: "",
 				duration: 45
 			}
 		],
-		guest_names: ["Roman", "Julian", "Veronica"],
-		guest_emails: ["roman@gmail.com", "julian@gmail.com", "vero@gmail.com"],
-		guest_roles: ["reemplazo", "coordinador", "oyente"],
+		guests: [
+			{
+				id: 1,
+				meeting_id: 1,
+				fullname: "Roman",
+				email: "roman@gmail.com",
+				rol: "oyente"
+			},
+			{
+				id: 2,
+				meeting_id: 1,
+				fullname: "Veronica",
+				email: "roman@gmail.com",
+				rol: "coordinadora"
+			}
+		],
 		place: "Sala Reuniones",
 		description: "Revisión sueldos empleados planta Quilicura",
 		target: "Reajuste Sueldos"
@@ -64,6 +77,11 @@ export const MemoDetails = props => {
 
 	const [time, setTime] = useState(0);
 	const [clockRef, setClockRef] = useState(null);
+	const [flag, setFlag] = useState({
+		flag1: false,
+		flag2: false,
+		flag3: false
+	});
 
 	// function getFetch{
 	// 	url => {
@@ -80,6 +98,7 @@ export const MemoDetails = props => {
 		if (!!state.topics) {
 			state.topics.forEach(item => {
 				//CONDICIONAR EL forEach AL CURRENT USER y AL CURRENT MEETING
+				//ESTA BIEN ESTE ARRAY EN BASE AL BACKEND?
 				sum_time += item.duration;
 			});
 			setTime(sum_time);
@@ -94,23 +113,43 @@ export const MemoDetails = props => {
 		clockRef.pause();
 	}
 
-	function onUpdate(e, name) {
+	function handleChange(e, name) {
 		const copy_array = Object.assign({}, state);
 		copy_array[name] = e.target.value;
 		setState(copy_array);
 	}
 
-	function onUpdate2(e, name) {
+	function handleChangeTopic(e, name) {
 		const copy_array = Object.assign({}, topic);
 		copy_array[name] = e.target.value;
 		setTopic(copy_array);
 	}
 
+	$("#submit-errors").hide();
+	$("#foo").on("click", function() {
+		console.log("here");
+		$("#submit-errors").show(); //or slideDown() for effect
+	});
+
 	function onCreateTopic(data) {
-		const copy_array = Object.assign({}, state);
-		copy_array.topics.push(data);
-		setState(copy_array);
-		// SE DEBE HACER UN FETCH POST Y LUEGO FETCH GET PARA QUE DEVUELVA EL NUEVO TOPIC CON UN ID ASIGNADO
+		if (data.title) {
+			const copy_array = Object.assign({}, state);
+			copy_array.topics.push(data);
+			setState(copy_array);
+			setTopic({
+				id: "",
+				meeting_id: state.topics.meeting_id,
+				title: "",
+				priority: "",
+				notes: "",
+				care: "",
+				tracking: "",
+				duration: 0
+			});
+		} // SE DEBE HACER UN FETCH POST Y LUEGO FETCH GET PARA QUE DEVUELVA EL NUEVO TOPIC CON UN ID ASIGNADO
+		else {
+			alert("Debes ingresar un título antes de ingresar este tema");
+		}
 	}
 
 	function onUpdateTopic(id, data) {
@@ -121,24 +160,18 @@ export const MemoDetails = props => {
 		copy_array.topics[index] = data;
 		setState(copy_array);
 	}
-	function onDeleteTopic(id) {
-		const copy_array = Object.assign({}, state);
-		const index = state.topics.findIndex((item, i) => {
-			return item.id == id;
-		});
-		// CUANDO OCUPO ESTA FUNCION, A PESAR QUE ELIMINA CORRECTAMENTE, EL COMPONENTE TEMAS RENDERIZA MAL
-		copy_array.topics.splice(index, 1);
-		setState(copy_array);
-		console.log(state.topics);
-	}
 
-	function alreadyChecked(id) {
-		for (var i = 0; i < state.topics.length; i++) {
-			if (state.topics[i].id == id) {
-				return true;
-			}
-		}
-		return false;
+	function onDeleteTopic(id) {
+		//const index = state.topics.findIndex((item, i) => {
+		//	return item.id == id;
+		//});
+		//copy_array.topics.splice(index, 1);
+
+		const copy_array = Object.assign({}, state);
+		copy_array.topics = copy_array.topics.filter(item => {
+			return item.id !== id;
+		});
+		setState(copy_array);
 	}
 
 	return (
@@ -155,7 +188,7 @@ export const MemoDetails = props => {
 								<div className="col-sm-8">
 									<input
 										type="text"
-										onChange={e => onUpdate(e, "project_name")}
+										onChange={e => handleChange(e, "project_name")}
 										className="form-control"
 										value={state.project_name}
 										placeholder="Proyecto"
@@ -169,7 +202,7 @@ export const MemoDetails = props => {
 								<div className="col-sm-8">
 									<input
 										type="text"
-										onChange={e => onUpdate(e, "title")}
+										onChange={e => handleChange(e, "title")}
 										className="form-control"
 										value={state.title}
 										placeholder="Título"
@@ -182,8 +215,8 @@ export const MemoDetails = props => {
 								</label>
 								<div className="col-sm-8">
 									<input
-										type="text"
-										onChange={e => onUpdate(e, "meeting_date")}
+										type="date"
+										onChange={e => handleChange(e, "meeting_date")}
 										className="form-control"
 										value={state.meeting_date}
 										placeholder="Fecha"
@@ -196,8 +229,8 @@ export const MemoDetails = props => {
 								</label>
 								<div className="col-sm-8">
 									<input
-										type="text"
-										onChange={e => onUpdate(e, "meeting_hour")}
+										type="time"
+										onChange={e => handleChange(e, "meeting_hour")}
 										className="form-control"
 										value={state.meeting_hour}
 										placeholder="Fecha"
@@ -211,7 +244,7 @@ export const MemoDetails = props => {
 								<div className="col-sm-8">
 									<input
 										type="text"
-										onChange={e => onUpdate(e, "place")}
+										onChange={e => handleChange(e, "place")}
 										className="form-control"
 										value={state.place}
 										placeholder="Lugar"
@@ -220,12 +253,12 @@ export const MemoDetails = props => {
 							</div>
 							<div className="form-group row">
 								<label htmlFor="inputAdmin" className="col-sm-4 col-form-label">
-									Citación hecha por:
+									Organizador:
 								</label>
 								<div className="col-sm-8">
 									<input
 										type="text"
-										onChange={e => onUpdate(e, "admin")}
+										onChange={e => handleChange(e, "admin")}
 										className="form-control"
 										value={state.admin}
 										placeholder="Nombre Citador"
@@ -250,9 +283,7 @@ export const MemoDetails = props => {
 										return alert("La reunión se encuentra detenida");
 									}}
 									OnComplete={() => {
-										return alert(
-											"La reunión se ha terminado, Muchas gracias por su asistencia. Hasta la Próxima !"
-										);
+										return alert("La reunión ha finalizado. Muchas gracias");
 									}}
 								/>
 							</h1>
@@ -282,11 +313,11 @@ export const MemoDetails = props => {
 					<div className="col">
 						<h4 className="justify-content-center align-content-center">Participantes</h4>
 						<ul className="list-group">
-							{!!state.guest_names &&
-								state.guest_names.map((item, i) => {
+							{!!state.guests &&
+								state.guests.map((item, i) => {
 									return (
 										<li className="list-group-item" key={i}>
-											<span>{item}</span>
+											<span>{item.fullname}</span>
 										</li>
 									);
 								})}
@@ -295,11 +326,11 @@ export const MemoDetails = props => {
 					<div className="col">
 						<h4>Correos</h4>
 						<ul className="list-group">
-							{!!state.guest_emails &&
-								state.guest_emails.map((item, i) => {
+							{!!state.guests &&
+								state.guests.map((item, i) => {
 									return (
 										<li className="list-group-item" key={i}>
-											<span>{item}</span>
+											<span>{item.email}</span>
 										</li>
 									);
 								})}
@@ -308,11 +339,11 @@ export const MemoDetails = props => {
 					<div className="col">
 						<h4>Roles</h4>
 						<ul className="list-group">
-							{!!state.guest_roles &&
-								state.guest_roles.map((item, i) => {
+							{!!state.guests &&
+								state.guests.map((item, i) => {
 									return (
 										<li className="list-group-item" key={i}>
-											<span>{item}</span>
+											<span>{item.rol}</span>
 										</li>
 									);
 								})}
@@ -332,7 +363,7 @@ export const MemoDetails = props => {
 								<div className="col-sm-10">
 									<input
 										type="text"
-										onChange={e => onUpdate(e, "description")}
+										onChange={e => handleChange(e, "description")}
 										className="form-control"
 										value={state.description}
 										placeholder="Descripcion"
@@ -346,7 +377,7 @@ export const MemoDetails = props => {
 								<div className="col-sm-10">
 									<input
 										type="text"
-										onChange={e => onUpdate(e, "target")}
+										onChange={e => handleChange(e, "target")}
 										className="form-control"
 										value={state.target}
 										placeholder="Objetivo"
@@ -363,15 +394,8 @@ export const MemoDetails = props => {
 				<div className="row" style={{ margin: "0px", marginTop: "20px" }}>
 					<div className="col">
 						{state.topics.map((item, i) => {
-							return (
-								<Temas
-									item={item}
-									key={i}
-									update={onUpdateTopic}
-									delete={onDeleteTopic}
-									checked={alreadyChecked}
-								/>
-							);
+							console.log(item.title);
+							return <Temas item={item} key={i} update={onUpdateTopic} delete={onDeleteTopic} />;
 						})}
 
 						<li className="list-group-item p-1">
@@ -395,10 +419,14 @@ export const MemoDetails = props => {
 							</div>
 							<div className="row w-100 m-0">
 								<div className="col-md-2 px-0">
-									<input type="text" value={topic.title} onChange={e => onUpdate2(e, "title")} />
+									<input
+										type="text"
+										value={topic.title}
+										onChange={e => handleChangeTopic(e, "title")}
+									/>
 								</div>
 								<div className="col-md-1 d-flex align-item-center d-flex justify-content-center px-0">
-									<select value={topic.priority} onChange={e => onUpdate2(e, "priority")}>
+									<select value={topic.priority} onChange={e => handleChangeTopic(e, "priority")}>
 										<option value="" selected="" />
 										<option value="Alta">Alta</option>
 										<option value="Media">Media</option>
@@ -409,37 +437,30 @@ export const MemoDetails = props => {
 									<input
 										type="text"
 										value={topic.notes}
-										onChange={e => onUpdate2(e, "notes")}
+										onChange={e => handleChangeTopic(e, "notes")}
 										style={{ width: "100%" }}
 									/>
 								</div>
 								<div className="col-md-2 px-0">
-									<input type="text" value={topic.care} onChange={e => onUpdate2(e, "care")} />
+									<input
+										type="text"
+										value={topic.care}
+										onChange={e => handleChangeTopic(e, "care")}
+									/>
 								</div>
 								<div className="col-md-2">
 									<input
 										type="date"
 										value={topic.tracking}
-										onChange={e => onUpdate2(e, "tracking")}
+										onChange={e => handleChangeTopic(e, "tracking")}
 									/>
 								</div>
 								<div className="col-md-1">
 									<i
-										//REVISAR CONDICION, DEBIERA SER MEJOR CUANDO LE HAGO CLICK, NO CUANDO YA ESTÁ EN EL STATE
-										className={"fas fa-check" + (alreadyChecked(topic.id) ? "-double" : "")}
+										className={"fas fa-plus"}
 										style={{ paddingLeft: "7px" }}
 										onClick={() => {
 											onCreateTopic(topic);
-											setTopic({
-												id: "",
-												meeting_id: state.topics.meeting_id,
-												title: "",
-												priority: "",
-												notes: "",
-												care: "",
-												tracking: "",
-												duration: 0
-											});
 										}}
 									/>{" "}
 									<i
@@ -452,25 +473,25 @@ export const MemoDetails = props => {
 								</div>
 							</div>
 						</li>
-						<button
+						{/* <button
 							type="button"
 							className="btn btn-outline-info float-right mt-2"
 							onClick={() => {
-								//ESTA BIEN QUE COMPRUEBE PRIMERO SI EL TEMA ACTUAL YA SE CREÓ?, SINO PARA GUARDARLO AHORA.
-								alreadyChecked(topic.id) ? "" : onCreateTopic(topic);
-								setTopic({
-									id: "",
-									meeting_id: state.id,
-									title: "",
-									priority: "",
-									notes: "",
-									care: "",
-									tracking: "",
-									duration: 0
-								});
+								alreadyChecked(topic.id)
+									? setTopic({
+											id: "",
+											meeting_id: state.id,
+											title: "",
+											priority: "",
+											notes: "",
+											care: "",
+											tracking: "",
+											duration: 0
+									  })
+									: alert("Debe guardar el tema actual antes de crear uno nuevo");
 							}}>
 							<i className="fa fa-plus" />
-						</button>
+						</button> */}
 					</div>
 				</div>
 			</div>

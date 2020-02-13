@@ -49,7 +49,7 @@ export const Principal = props => {
 			<div className="container" style={{ marginTop: "20px" }}>
 				<div className="row">
 					<div className="col-3 text-center text-sm-left">
-						<h2>Fecha</h2>
+						<h2>Fecha Reunión</h2>
 					</div>
 					<div className="col-3 text-center text-sm-left">
 						<h2>Título</h2>
@@ -68,7 +68,7 @@ export const Principal = props => {
 								store.meetings.map((item, i) => {
 									if (item.user_id == 1) {
 										//CONDICIONAR EL MAP AL CURRENT USER EN VEZ DE 1
-										return <Minutas user_memo={item} key={i} index={i} />;
+										return <Minutas memo={item} key={i} index={i} />;
 									}
 								})}
 						</ul>

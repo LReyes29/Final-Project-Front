@@ -40,10 +40,10 @@ export const Home = () => {
 						</div>
 					</div>
 					<div className="row justify-content-center">
-						<div className="col-md-4 p-4 shadow-sm">
+						<div className="col-md-4 p-4">
 							<i className="d-block fa fa-circle fa-3x mb-2 text-muted" />
 							<h4>
-								<b>One</b>
+								<b>Primero</b>
 							</h4>
 							<p>
 								{" "}
@@ -52,9 +52,9 @@ export const Home = () => {
 							</p>
 						</div>
 						<div className="col-md-4 col-6 p-4">
-							<i className="d-block fa fa-stop-circle-o fa-3x mb-2 text-muted" />
+							<i className="d-block fa fa-stop-circle fa-3x mb-2 text-muted" />
 							<h4>
-								<b>Two</b>
+								<b>Luego</b>
 							</h4>
 							<p>
 								{" "}
@@ -63,9 +63,9 @@ export const Home = () => {
 							</p>
 						</div>
 						<div className="col-md-4 col-6 p-4">
-							<i className="d-block fa fa-circle-o fa-3x mb-2 text-muted" />
+							<i className="d-block fa fa-circle fa-3x mb-2 text-muted" />
 							<h4>
-								<b>Three</b>
+								<b>Para finalizar</b>
 							</h4>
 							<p>
 								{" "}

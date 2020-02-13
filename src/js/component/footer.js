@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 export const Footer = () => (
 	<footer className="footer mt-auto py-3 text-center">
-		<div className="container">
+		<div className="container p-md-0">
 			<footer
 				style={{ backgroundColor: "#192a56", paddingTop: "15px", paddingBottom: "15px", marginTop: "30px" }}>
 				<div className="container">

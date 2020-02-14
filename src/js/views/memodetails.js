@@ -12,61 +12,10 @@ import { Context } from "../store/appContext";
 export const MemoDetails = props => {
 	const { store, actions } = useContext(Context);
 
-	const [state, setState] = useState({
-		id: 1,
-		user_id: 1,
-		admin: "Luis Reyes",
-		create_date: "01-01-2020",
-		meeting_date: "23-03-2020",
-		meeting_hour: "14:30 pm",
-		project_name: "Proyecto1",
-		title: "Reunion RRHH",
-		topics: [
-			{
-				id: 1,
-				meeting_id: 1,
-				title: "Tema1",
-				priority: "",
-				notes: "Area comercial debe revisar",
-				care: "Roberto Soto",
-				tracking: "",
-				duration: 30
-			},
-			{
-				id: 2,
-				meeting_id: 1,
-				title: "Tema2",
-				priority: "",
-				notes: "",
-				care: "",
-				tracking: "",
-				duration: 45
-			}
-		],
-		guests: [
-			{
-				id: 1,
-				meeting_id: 1,
-				fullname: "Roman",
-				email: "roman@gmail.com",
-				rol: "oyente"
-			},
-			{
-				id: 2,
-				meeting_id: 1,
-				fullname: "Veronica",
-				email: "roman@gmail.com",
-				rol: "coordinadora"
-			}
-		],
-		place: "Sala Reuniones",
-		description: "Revisión sueldos empleados planta Quilicura",
-		target: "Reajuste Sueldos"
-	});
+	const [meeting, setMeeting] = useState({});
 
 	const [topic, setTopic] = useState({
-		id: "",
-		meeting_id: state.id,
+		id: 0,
 		title: "",
 		priority: "",
 		notes: "",
@@ -78,27 +27,29 @@ export const MemoDetails = props => {
 	const [time, setTime] = useState(0);
 	const [clockRef, setClockRef] = useState(null);
 
-	// function getFetch{
-	// 	url => {
-	// 		fetch(url)
-	// 			.then(resp => resp.json())
-	// 			.then(data => setState({ data }));
-	// 	}
-	// }
+	function getMeeting(url) {
+		fetch(url)
+			.then(resp => resp.json())
+			.then(data => setMeeting(data));
+	}
 
 	useEffect(() => {
-		// 	getFetch("#" + props.match.params.id);
-
-		let sum_time = 0;
-		if (!!state.topics) {
-			state.topics.forEach(item => {
-				//CONDICIONAR EL forEach AL CURRENT USER y AL CURRENT MEETING
-				//ESTA BIEN ESTE ARRAY EN BASE AL BACKEND?
-				sum_time += item.duration;
-			});
-			setTime(sum_time);
-		}
+		const meeting_id = props.match.params.id;
+		getMeeting("http://localhost:5000/api/meetings/" + meeting_id);
 	}, []);
+
+	useEffect(
+		() => {
+			let sum_time = 0;
+			if (meeting.topics != null) {
+				meeting.topics.forEach(item => {
+					sum_time += item.duration;
+				});
+				setTime(sum_time);
+			}
+		},
+		[meeting]
+	);
 
 	function start() {
 		clockRef.start();
@@ -109,9 +60,9 @@ export const MemoDetails = props => {
 	}
 
 	function handleChange(e, name) {
-		const copy_array = Object.assign({}, state);
+		const copy_array = Object.assign({}, meeting);
 		copy_array[name] = e.target.value;
-		setState(copy_array);
+		setMeeting(copy_array);
 	}
 
 	function handleChangeTopic(e, name) {
@@ -122,12 +73,12 @@ export const MemoDetails = props => {
 
 	function onCreateTopic(data) {
 		if (data.title) {
-			const copy_array = Object.assign({}, state);
+			const copy_array = Object.assign({}, meeting);
 			copy_array.topics.push(data);
-			setState(copy_array);
+			setMeeting(copy_array);
+			actions.onUpdate(meeting, props.match.params.id);
 			setTopic({
-				id: "",
-				meeting_id: state.topics.meeting_id,
+				id: 0,
 				title: "",
 				priority: "",
 				notes: "",
@@ -135,32 +86,29 @@ export const MemoDetails = props => {
 				tracking: "",
 				duration: 0
 			});
-		} // SE DEBE HACER UN FETCH POST Y LUEGO FETCH GET PARA QUE DEVUELVA EL NUEVO TOPIC CON UN ID ASIGNADO
-		else {
+		} else {
 			alert("Debes ingresar un título antes de ingresar este tema");
 		}
 	}
 
 	function onUpdateTopic(id, data) {
-		const copy_array = Object.assign({}, state);
-		const index = state.topics.findIndex((item, i) => {
+		const copy_array = Object.assign({}, meeting);
+		const index = meeting.topics.findIndex((item, i) => {
 			return item.id == id;
 		});
 		copy_array.topics[index] = data;
-		setState(copy_array);
+		setMeeting(copy_array);
+		actions.onUpdate(meeting, props.match.params.id);
 	}
 
 	function onDeleteTopic(id) {
-		//const index = state.topics.findIndex((item, i) => {
-		//	return item.id == id;
-		//});
-		//copy_array.topics.splice(index, 1);
+		// 	const copy_array = Object.assign({}, meeting);
+		// 	copy_array.topics = copy_array.topics.filter(item => {
+		// 		return item.id !== id;
+		// 	});
+		// 	setMeeting(copy_array);
 
-		const copy_array = Object.assign({}, state);
-		copy_array.topics = copy_array.topics.filter(item => {
-			return item.id !== id;
-		});
-		setState(copy_array);
+		actions.onDeleteTopic(id);
 	}
 
 	return (
@@ -179,8 +127,8 @@ export const MemoDetails = props => {
 										type="text"
 										onChange={e => handleChange(e, "project_name")}
 										className="form-control"
-										value={state.project_name}
-										placeholder="Proyecto"
+										value={meeting.project_name}
+										//placeholder="Proyecto"
 									/>
 								</div>
 							</div>
@@ -193,8 +141,8 @@ export const MemoDetails = props => {
 										type="text"
 										onChange={e => handleChange(e, "title")}
 										className="form-control"
-										value={state.title}
-										placeholder="Título"
+										value={meeting.title}
+										//placeholder="Título"
 									/>
 								</div>
 							</div>
@@ -207,8 +155,8 @@ export const MemoDetails = props => {
 										type="date"
 										onChange={e => handleChange(e, "meeting_date")}
 										className="form-control"
-										value={state.meeting_date}
-										placeholder="Fecha"
+										value={meeting.meeting_date}
+										//placeholder="Fecha"
 									/>
 								</div>
 							</div>
@@ -221,8 +169,8 @@ export const MemoDetails = props => {
 										type="time"
 										onChange={e => handleChange(e, "meeting_hour")}
 										className="form-control"
-										value={state.meeting_hour}
-										placeholder="Fecha"
+										value={meeting.meeting_hour}
+										//placeholder="Fecha"
 									/>
 								</div>
 							</div>
@@ -235,8 +183,8 @@ export const MemoDetails = props => {
 										type="text"
 										onChange={e => handleChange(e, "place")}
 										className="form-control"
-										value={state.place}
-										placeholder="Lugar"
+										value={meeting.place}
+										//placeholder="Lugar"
 									/>
 								</div>
 							</div>
@@ -249,8 +197,8 @@ export const MemoDetails = props => {
 										type="text"
 										onChange={e => handleChange(e, "admin")}
 										className="form-control"
-										value={state.admin}
-										placeholder="Nombre Citador"
+										value={store.currentUserName}
+										//placeholder="Nombre Citador"
 									/>
 								</div>
 							</div>
@@ -297,50 +245,6 @@ export const MemoDetails = props => {
 				</div>
 			</div>
 
-			<div className="container" style={{ padding: "0px" }}>
-				<div className="row" style={{ margin: "0px", marginTop: "20px" }}>
-					<div className="col">
-						<h4 className="justify-content-center align-content-center">Participantes</h4>
-						<ul className="list-group">
-							{!!state.guests &&
-								state.guests.map((item, i) => {
-									return (
-										<li className="list-group-item" key={i}>
-											<span>{item.fullname}</span>
-										</li>
-									);
-								})}
-						</ul>
-					</div>
-					<div className="col">
-						<h4>Correos</h4>
-						<ul className="list-group">
-							{!!state.guests &&
-								state.guests.map((item, i) => {
-									return (
-										<li className="list-group-item" key={i}>
-											<span>{item.email}</span>
-										</li>
-									);
-								})}
-						</ul>
-					</div>
-					<div className="col">
-						<h4>Roles</h4>
-						<ul className="list-group">
-							{!!state.guests &&
-								state.guests.map((item, i) => {
-									return (
-										<li className="list-group-item" key={i}>
-											<span>{item.rol}</span>
-										</li>
-									);
-								})}
-						</ul>
-					</div>
-				</div>
-			</div>
-
 			<div className="container" style={{ padding: "5px" }}>
 				<div className="row" style={{ margin: "0px", marginTop: "30px" }}>
 					<div className="col-12" style={{ paddingRight: "5px", paddingLeft: "5px" }}>
@@ -354,8 +258,8 @@ export const MemoDetails = props => {
 										type="text"
 										onChange={e => handleChange(e, "description")}
 										className="form-control"
-										value={state.description}
-										placeholder="Descripcion"
+										value={meeting.description}
+										//placeholder="Descripcion"
 									/>
 								</div>
 							</div>
@@ -368,8 +272,8 @@ export const MemoDetails = props => {
 										type="text"
 										onChange={e => handleChange(e, "target")}
 										className="form-control"
-										value={state.target}
-										placeholder="Objetivo"
+										value={meeting.target}
+										//placeholder="Objetivo"
 									/>
 								</div>
 							</div>
@@ -378,14 +282,58 @@ export const MemoDetails = props => {
 				</div>
 			</div>
 
+			<div className="container" style={{ padding: "0px" }}>
+				<div className="row" style={{ margin: "0px", marginTop: "20px" }}>
+					<div className="col">
+						<h4 className="justify-content-center align-content-center">Participantes</h4>
+						<ul className="list-group">
+							{!!meeting.guests &&
+								meeting.guests.map((item, i) => {
+									return (
+										<li className="list-group-item" key={i}>
+											<span>{item.fullname}</span>
+										</li>
+									);
+								})}
+						</ul>
+					</div>
+					<div className="col">
+						<h4>Correos</h4>
+						<ul className="list-group">
+							{!!meeting.guests &&
+								meeting.guests.map((item, i) => {
+									return (
+										<li className="list-group-item" key={i}>
+											<span>{item.email}</span>
+										</li>
+									);
+								})}
+						</ul>
+					</div>
+					<div className="col">
+						<h4>Roles</h4>
+						<ul className="list-group">
+							{!!meeting.guests &&
+								meeting.guests.map((item, i) => {
+									return (
+										<li className="list-group-item" key={i}>
+											<span>{item.rol}</span>
+										</li>
+									);
+								})}
+						</ul>
+					</div>
+				</div>
+			</div>
+
 			<div className="container" style={{ padding: "5px" }}>
 				<h4>Revisión de Temas:</h4>
 				<div className="row" style={{ margin: "0px", marginTop: "20px" }}>
 					<div className="col">
-						{state.topics.map((item, i) => {
-							console.log(item.title);
-							return <Temas item={item} key={i} update={onUpdateTopic} delete={onDeleteTopic} />;
-						})}
+						{!!meeting.topics &&
+							meeting.topics.map((item, i) => {
+								return <Temas item={item} key={i} update={onUpdateTopic} delete={onDeleteTopic} />;
+							})}
 
 						<li className="list-group-item p-1">
 							<div className="row w-100 m-0">
@@ -416,7 +364,7 @@ export const MemoDetails = props => {
 								</div>
 								<div className="col-md-1 d-flex align-item-center d-flex justify-content-center px-0">
 									<select value={topic.priority} onChange={e => handleChangeTopic(e, "priority")}>
-										<option value="" selected="" />
+										<option value="" />
 										<option value="Alta">Alta</option>
 										<option value="Media">Media</option>
 										<option value="Baja">Baja</option>
@@ -451,36 +399,10 @@ export const MemoDetails = props => {
 										onClick={() => {
 											onCreateTopic(topic);
 										}}
-									/>{" "}
-									<i
-										className="fa fa-trash"
-										style={{ paddingLeft: "7px", paddingRight: "5px" }}
-										onClick={() => {
-											onDeleteTopic(topic.id);
-										}}
 									/>
 								</div>
 							</div>
 						</li>
-						{/* <button
-							type="button"
-							className="btn btn-outline-info float-right mt-2"
-							onClick={() => {
-								alreadyChecked(topic.id)
-									? setTopic({
-											id: "",
-											meeting_id: state.id,
-											title: "",
-											priority: "",
-											notes: "",
-											care: "",
-											tracking: "",
-											duration: 0
-									  })
-									: alert("Debe guardar el tema actual antes de crear uno nuevo");
-							}}>
-							<i className="fa fa-plus" />
-						</button> */}
 					</div>
 				</div>
 			</div>
@@ -494,7 +416,7 @@ export const MemoDetails = props => {
 						<button
 							className="btn btn-primary mt-3"
 							type="button"
-							onClick={() => actions.onUpdate(state)}
+							onClick={() => actions.onUpdate(meeting, props.match.params.id)}
 							style={{ marginLeft: "10px" }}>
 							Guardar
 						</button>

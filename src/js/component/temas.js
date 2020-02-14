@@ -5,17 +5,17 @@ import PropTypes from "prop-types";
 import { Context } from "./../store/appContext";
 
 export const Temas = props => {
+	const { store, actions } = useContext(Context);
 	const [topic, setTopic] = useState(props.item);
 
 	function handleChangeTopic(e, name) {
 		const data = Object.assign({}, topic);
-		console.log(data);
 		data[name] = e.target.value;
 		setTopic(data);
 	}
 
 	function alreadyChecked() {
-		if (props.item.title !== "" && props.item.priority !== "") {
+		if (props.item.title != "" && props.item.priority != "") {
 			return true;
 		}
 		return false;
@@ -48,7 +48,7 @@ export const Temas = props => {
 					</div>
 					<div className="col-md-1 d-flex align-item-center d-flex justify-content-center px-0">
 						<select value={topic.priority} onChange={e => handleChangeTopic(e, "priority")}>
-							<option value="" selected="" />
+							<option value="" />
 							<option value="Alta">Alta</option>
 							<option value="Media">Media</option>
 							<option value="Baja">Baja</option>
@@ -73,14 +73,14 @@ export const Temas = props => {
 							className={"fas fa-check" + (alreadyChecked() ? "-double" : "")}
 							style={{ paddingLeft: "7px" }}
 							onClick={() => {
-								props.update(topic.id, topic);
+								actions.onUpdateTopic(topic, topic.id);
 							}}
 						/>{" "}
 						<i
 							className="fa fa-trash"
 							style={{ paddingLeft: "7px", paddingRight: "5px" }}
 							onClick={() => {
-								props.delete(topic.id);
+								actions.onDeleteTopic(topic.id);
 							}}
 						/>
 					</div>

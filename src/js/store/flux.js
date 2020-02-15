@@ -1,9 +1,10 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			current_user_id: 1,
-			meetings: [
+			user_id: 1,
+			metings: [
 				{
+					meeting_id: 0,
 					create_date: "4-02-2020",
 					description: "descripcion4",
 					guests: [],
@@ -15,7 +16,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					title: "title4",
 					topics: [
 						{
-							id: 1,
+							id: 0,
 							care: "care77",
 							duration: "duration5",
 							notes: "notes5",
@@ -25,7 +26,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 							meeting_id: 1
 						},
 						{
-							id: 2,
+							id: 1,
 							care: "care88",
 							duration: "duration6",
 							notes: "notes6",
@@ -34,8 +35,41 @@ const getState = ({ getStore, getActions, setStore }) => {
 							tracking: "tracking6",
 							meeting_id: 1
 						}
-					],
-					user_id: 1
+					]
+				},
+				{
+					meeting_id: 1,
+					create_date: "4-02-2020",
+					description: "descripcion4",
+					guests: [],
+					meeting_date: "4-01-2020",
+					meeting_hour: "4:00 pm",
+					place: "place4",
+					project_name: "proyecto4",
+					target: "target4",
+					title: "title4",
+					topics: [
+						{
+							id: 0,
+							care: "care77",
+							duration: "duration5",
+							notes: "notes5",
+							priority: "priority5",
+							title: "title5",
+							tracking: "tracking5",
+							meeting_id: 1
+						},
+						{
+							id: 1,
+							care: "care88",
+							duration: "duration6",
+							notes: "notes6",
+							priority: "priority6",
+							title: "title6",
+							tracking: "tracking6",
+							meeting_id: 1
+						}
+					]
 				}
 			]
 		},
@@ -82,6 +116,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			handleChange: e => {
+				e.preventDefault();
 				setStore({ [e.target.name]: e.target.value });
 			}
 

@@ -34,18 +34,19 @@ class Login extends React.Component {
 		};
 
 		{
-			/* Aqui se manda a la api*/
+			/* Aqui se manda a la api y devuelve un user id*/
+			/* database.push(form);
+				return user_id
+			*/
 		}
-		// database.push(form);
-		this.setState({
-			name: "",
-			email: "",
-			password: " ",
-			repeated_pass: " "
-		});
+		let user_id = 15;
 
 		if (this.state.password === this.state.repeated_pass) {
 			this.setState({
+				current_user_id: user_id,
+				name: this.state.name,
+				email: this.state.email,
+				password: this.state.password,
 				red: true
 			});
 		}
@@ -59,16 +60,22 @@ class Login extends React.Component {
 		};
 
 		{
-			/* Aqui se manda a la api*/
+			/* 
+				database.push(form);
+				Aqui se manda a la api y devuelve un user id
+				database.push(form);
+				return user_id, 
+			*/
 		}
 
-		//database.push(form);
-		this.setState({
-			email: " ",
-			password: " "
-		});
+		let user_id = 16;
+
 		if (this.state.password) {
 			this.setState({
+				current_user_id: user_id,
+				name: this.state.name,
+				email: this.state.email,
+				password: this.state.password,
 				red: true
 			});
 		}

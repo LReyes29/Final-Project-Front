@@ -13,16 +13,18 @@ export const Minutas = props => {
 			<li className="list-group-item p-1">
 				<div className="row w-100">
 					<div className="col-3 text-center text-sm-left">
-						<h4>{props.memo.meeting_date}</h4>
+						<h4>{props.metings.meeting_date}</h4>
 					</div>
 					<div className="col-3 text-center text-sm-left">
-						<h4>{props.memo.title}</h4>
+						<h4>{props.metings.title}</h4>
 					</div>
 					<div className="col-3 text-center text-sm-left">
-						<h4>{props.memo.description}</h4>
+						<h4>{props.metings.description}</h4>
 					</div>
 					<div className="col-3 text-center items-center">
-						<Link className="btn btn-outline-info p-0 border-0" to={"/memodetails/" + props.memo.id}>
+						<Link
+							className="btn btn-outline-info p-0 border-0"
+							to={"/metingsdetails/" + props.metings.meeting_id}>
 							<button
 								type="button"
 								className="btn"
@@ -32,7 +34,7 @@ export const Minutas = props => {
 								<i className="far fa-edit" />
 							</button>
 						</Link>
-						<button className="btn" onClick={() => actions.onDelete(props.memo.id)}>
+						<button className="btn" onClick={() => actions.onDelete(props.metings.meeting_id)}>
 							<i className="fas fa-trash" />
 						</button>
 						<button
@@ -117,7 +119,7 @@ export const Minutas = props => {
 Minutas.propTypes = {
 	onDelete: PropTypes.func,
 
-	id: PropTypes.string,
+	meeting_id: PropTypes.number,
 	date: PropTypes.string,
 	title: PropTypes.string,
 	description: PropTypes.string,

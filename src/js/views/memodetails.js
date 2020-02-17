@@ -12,9 +12,7 @@ import { Context } from "../store/appContext";
 export const MemoDetails = props => {
 	const { store, actions } = useContext(Context);
 
-	const [meeting, setMeeting] = useState({});
-
-	const [topic, setTopic] = useState({
+	const [newTopic, setNewTopic] = useState({
 		id: 0,
 		title: "",
 		priority: "",
@@ -27,29 +25,22 @@ export const MemoDetails = props => {
 	const [time, setTime] = useState(0);
 	const [clockRef, setClockRef] = useState(null);
 
-	function getMeeting(url) {
-		fetch(url)
-			.then(resp => resp.json())
-			.then(data => setMeeting(data));
-	}
-
-	useEffect(() => {
-		const meeting_id = props.match.params.id;
-		getMeeting("http://localhost:5000/api/meetings/" + meeting_id);
-	}, []);
-
 	useEffect(
 		() => {
-			let sum_time = 0;
-			if (meeting.topics != null) {
-				meeting.topics.forEach(item => {
-					sum_time += item.duration;
-				});
-				setTime(sum_time);
-			}
+			actions.getCurrentMeeting();
 		},
-		[meeting]
+		[store.userMeetings]
 	);
+
+	useEffect(() => {
+		let sum_time = 0;
+		if (store.currentMeeting.topics != null) {
+			store.currentMeeting.topics.forEach(item => {
+				sum_time += item.duration;
+			});
+			setTime(sum_time);
+		}
+	}, []);
 
 	function start() {
 		clockRef.start();
@@ -59,57 +50,46 @@ export const MemoDetails = props => {
 		clockRef.pause();
 	}
 
-	function handleChange(e, name) {
-		const copy_array = Object.assign({}, meeting);
-		copy_array[name] = e.target.value;
-		setMeeting(copy_array);
+	// function handleChange(e, name) {
+	// 	const copy_array = Object.assign({}, meeting);
+	// 	copy_array[name] = e.target.value;
+	// 	setMeeting(copy_array);
+	// }
+
+	function handleChangeNewTopic(e) {
+		const nT = Object.assign({}, newTopic);
+		nT[e.target.name] = e.target.value;
+		setNewTopic(nT);
 	}
 
-	function handleChangeTopic(e, name) {
-		const copy_array = Object.assign({}, topic);
-		copy_array[name] = e.target.value;
-		setTopic(copy_array);
-	}
+	// function onCreateTopic(data) {
+	// 	if (data.title) {
+	// 		const copy_array = Object.assign({}, meeting);
+	// 		copy_array.topics.push(data);
+	// 		setMeeting(copy_array);
+	// 		actions.onUpdateMeeting(meeting, props.match.params.id);
+	// 	} else {
+	// 		alert("Debes ingresar un título antes de ingresar este tema");
+	// 	}
+	// }
 
-	function onCreateTopic(data) {
-		if (data.title) {
-			const copy_array = Object.assign({}, meeting);
-			copy_array.topics.push(data);
-			setMeeting(copy_array);
-			actions.onUpdate(meeting, props.match.params.id);
-			setTopic({
-				id: 0,
-				title: "",
-				priority: "",
-				notes: "",
-				care: "",
-				tracking: "",
-				duration: 0
-			});
-		} else {
-			alert("Debes ingresar un título antes de ingresar este tema");
-		}
-	}
+	// function onUpdateTopic(id, data) {
+	// 	const copy_array = Object.assign({}, meeting);
+	// 	const index = meeting.topics.findIndex((item, i) => {
+	// 		return item.id == id;
+	// 	});
+	// 	copy_array.topics[index] = data;
+	// 	setMeeting(copy_array);
+	// 	actions.onUpdate(meeting, props.match.params.id);
+	// }
 
-	function onUpdateTopic(id, data) {
-		const copy_array = Object.assign({}, meeting);
-		const index = meeting.topics.findIndex((item, i) => {
-			return item.id == id;
-		});
-		copy_array.topics[index] = data;
-		setMeeting(copy_array);
-		actions.onUpdate(meeting, props.match.params.id);
-	}
-
-	function onDeleteTopic(id) {
-		// 	const copy_array = Object.assign({}, meeting);
-		// 	copy_array.topics = copy_array.topics.filter(item => {
-		// 		return item.id !== id;
-		// 	});
-		// 	setMeeting(copy_array);
-
-		actions.onDeleteTopic(id);
-	}
+	// function onDeleteTopic(id) {
+	// 	// 	const copy_array = Object.assign({}, meeting);
+	// 	// 	copy_array.topics = copy_array.topics.filter(item => {
+	// 	// 		return item.id !== id;
+	// 	// 	});
+	// 	// 	setMeeting(copy_array);
+	//  //  }
 
 	return (
 		<>
@@ -125,9 +105,10 @@ export const MemoDetails = props => {
 								<div className="col-sm-8">
 									<input
 										type="text"
-										onChange={e => handleChange(e, "project_name")}
+										name="project_name"
+										onChange={e => actions.handleChangeMeeting(e)}
 										className="form-control"
-										value={meeting.project_name}
+										value={store.currentMeeting.project_name}
 										//placeholder="Proyecto"
 									/>
 								</div>
@@ -139,9 +120,10 @@ export const MemoDetails = props => {
 								<div className="col-sm-8">
 									<input
 										type="text"
-										onChange={e => handleChange(e, "title")}
+										name="title"
+										onChange={e => actions.handleChangeMeeting(e)}
 										className="form-control"
-										value={meeting.title}
+										value={store.currentMeeting.title}
 										//placeholder="Título"
 									/>
 								</div>
@@ -153,9 +135,10 @@ export const MemoDetails = props => {
 								<div className="col-sm-8">
 									<input
 										type="date"
-										onChange={e => handleChange(e, "meeting_date")}
+										name="meeting_date"
+										onChange={e => actions.handleChangeMeeting(e)}
 										className="form-control"
-										value={meeting.meeting_date}
+										value={store.currentMeeting.meeting_date}
 										//placeholder="Fecha"
 									/>
 								</div>
@@ -167,9 +150,10 @@ export const MemoDetails = props => {
 								<div className="col-sm-8">
 									<input
 										type="time"
-										onChange={e => handleChange(e, "meeting_hour")}
+										name="meeting_hour"
+										onChange={e => actions.handleChangeMeeting(e)}
 										className="form-control"
-										value={meeting.meeting_hour}
+										value={store.currentMeeting.meeting_hour}
 										//placeholder="Fecha"
 									/>
 								</div>
@@ -181,9 +165,10 @@ export const MemoDetails = props => {
 								<div className="col-sm-8">
 									<input
 										type="text"
-										onChange={e => handleChange(e, "place")}
+										name="place"
+										onChange={e => actions.handleChangeMeeting(e)}
 										className="form-control"
-										value={meeting.place}
+										value={store.currentMeeting.place}
 										//placeholder="Lugar"
 									/>
 								</div>
@@ -195,9 +180,8 @@ export const MemoDetails = props => {
 								<div className="col-sm-8">
 									<input
 										type="text"
-										onChange={e => handleChange(e, "admin")}
 										className="form-control"
-										value={store.currentUserName}
+										defaultValue={store.currentUserName}
 										//placeholder="Nombre Citador"
 									/>
 								</div>
@@ -256,9 +240,10 @@ export const MemoDetails = props => {
 								<div className="col-sm-10">
 									<input
 										type="text"
-										onChange={e => handleChange(e, "description")}
+										name="description"
+										onChange={e => actions.handleChangeMeeting(e)}
 										className="form-control"
-										value={meeting.description}
+										value={store.currentMeeting.description}
 										//placeholder="Descripcion"
 									/>
 								</div>
@@ -270,9 +255,10 @@ export const MemoDetails = props => {
 								<div className="col-sm-10">
 									<input
 										type="text"
-										onChange={e => handleChange(e, "target")}
+										name="target"
+										onChange={e => actions.handleChangeMeeting(e)}
 										className="form-control"
-										value={meeting.target}
+										value={store.currentMeeting.target}
 										//placeholder="Objetivo"
 									/>
 								</div>
@@ -287,8 +273,8 @@ export const MemoDetails = props => {
 					<div className="col">
 						<h4 className="justify-content-center align-content-center">Participantes</h4>
 						<ul className="list-group">
-							{!!meeting.guests &&
-								meeting.guests.map((item, i) => {
+							{!!store.currentMeeting.guests &&
+								store.currentMeeting.guests.map((item, i) => {
 									return (
 										<li className="list-group-item" key={i}>
 											<span>{item.fullname}</span>
@@ -300,8 +286,8 @@ export const MemoDetails = props => {
 					<div className="col">
 						<h4>Correos</h4>
 						<ul className="list-group">
-							{!!meeting.guests &&
-								meeting.guests.map((item, i) => {
+							{!!store.currentMeeting.guests &&
+								store.currentMeeting.guests.map((item, i) => {
 									return (
 										<li className="list-group-item" key={i}>
 											<span>{item.email}</span>
@@ -313,8 +299,8 @@ export const MemoDetails = props => {
 					<div className="col">
 						<h4>Roles</h4>
 						<ul className="list-group">
-							{!!meeting.guests &&
-								meeting.guests.map((item, i) => {
+							{!!store.currentMeeting.guests &&
+								store.currentMeeting.guests.map((item, i) => {
 									return (
 										<li className="list-group-item" key={i}>
 											<span>{item.rol}</span>
@@ -330,9 +316,9 @@ export const MemoDetails = props => {
 				<h4>Revisión de Temas:</h4>
 				<div className="row" style={{ margin: "0px", marginTop: "20px" }}>
 					<div className="col">
-						{!!meeting.topics &&
-							meeting.topics.map((item, i) => {
-								return <Temas item={item} key={i} update={onUpdateTopic} delete={onDeleteTopic} />;
+						{!!store.currentMeeting.topics &&
+							store.currentMeeting.topics.map((item, i) => {
+								return <Temas topic={item} key={i} />;
 							})}
 
 						<li className="list-group-item p-1">
@@ -358,12 +344,16 @@ export const MemoDetails = props => {
 								<div className="col-md-2 px-0">
 									<input
 										type="text"
-										value={topic.title}
-										onChange={e => handleChangeTopic(e, "title")}
+										name="title"
+										value={newTopic.title}
+										onChange={e => handleChangeNewTopic(e)}
 									/>
 								</div>
 								<div className="col-md-1 d-flex align-item-center d-flex justify-content-center px-0">
-									<select value={topic.priority} onChange={e => handleChangeTopic(e, "priority")}>
+									<select
+										name="priority"
+										value={newTopic.priority}
+										onChange={e => handleChangeNewTopic(e)}>
 										<option value="" />
 										<option value="Alta">Alta</option>
 										<option value="Media">Media</option>
@@ -373,23 +363,26 @@ export const MemoDetails = props => {
 								<div className="col-md-4 pl-0">
 									<input
 										type="text"
-										value={topic.notes}
-										onChange={e => handleChangeTopic(e, "notes")}
+										name="notes"
+										value={newTopic.notes}
+										onChange={e => handleChangeNewTopic(e)}
 										style={{ width: "100%" }}
 									/>
 								</div>
 								<div className="col-md-2 px-0">
 									<input
 										type="text"
-										value={topic.care}
-										onChange={e => handleChangeTopic(e, "care")}
+										name="care"
+										value={newTopic.care}
+										onChange={e => handleChangeNewTopic(e)}
 									/>
 								</div>
 								<div className="col-md-2">
 									<input
 										type="date"
-										value={topic.tracking}
-										onChange={e => handleChangeTopic(e, "tracking")}
+										name="tracking"
+										value={newTopic.tracking}
+										onChange={e => handleChangeNewTopic(e)}
 									/>
 								</div>
 								<div className="col-md-1">
@@ -397,7 +390,16 @@ export const MemoDetails = props => {
 										className={"fas fa-plus"}
 										style={{ paddingLeft: "7px" }}
 										onClick={() => {
-											onCreateTopic(topic);
+											actions.onCreateTopic(newTopic);
+											setNewTopic({
+												id: 0,
+												title: "",
+												priority: "",
+												notes: "",
+												care: "",
+												tracking: "",
+												duration: 0
+											});
 										}}
 									/>
 								</div>
@@ -416,7 +418,7 @@ export const MemoDetails = props => {
 						<button
 							className="btn btn-primary mt-3"
 							type="button"
-							onClick={() => actions.onUpdate(meeting, props.match.params.id)}
+							onClick={() => actions.onUpdateMeeting(store.currentMeeting, props.match.params.id)}
 							style={{ marginLeft: "10px" }}>
 							Guardar
 						</button>

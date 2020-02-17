@@ -11,7 +11,7 @@ export const NewMeeting = props => {
 		id: 1,
 		user_id: 1,
 		admin: "",
-		create_date: "",
+		create_date: new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate(),
 		meeting_date: "",
 		meeting_hour: "",
 		project_name: "",

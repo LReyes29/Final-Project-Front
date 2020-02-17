@@ -12,26 +12,29 @@ export const Minutas = props => {
 			<li className="list-group-item p-1">
 				<div className="row w-100">
 					<div className="col-3 text-center text-sm-left">
-						<h4>{props.memo.meeting_date}</h4>
+						<h4>{props.meeting.meeting_date}</h4>
 					</div>
 					<div className="col-3 text-center text-sm-left">
-						<h4>{props.memo.title}</h4>
+						<h4>{props.meeting.title}</h4>
 					</div>
 					<div className="col-3 text-center text-sm-left">
-						<h4>{props.memo.description}</h4>
+						<h4>{props.meeting.description}</h4>
 					</div>
 					<div className="col-3 text-center items-center">
-						<Link className="btn btn-outline-info p-0 border-0" to={"/memodetails/" + props.memo.id}>
-							<button type="button" className="btn">
+						<Link className="btn btn-outline-info p-0 border-0" to={"/memodetails/" + props.meeting.id}>
+							<button
+								type="button"
+								className="btn"
+								onClick={() => actions.saveMeetingId(props.meeting.id)}>
 								<i className="far fa-edit" />
 							</button>
 						</Link>
-						<button className="btn" onClick={() => actions.onDeleteMeeting(props.memo.id)}>
+						<button className="btn" onClick={() => actions.onDeleteMeeting(props.meeting.id)}>
 							<i className="fas fa-trash" />
 						</button>
 						<button
-							className="btn"
-							// onClick={() => actions.onSend(state.id)} // ESTA FUNCION QUEDARÁ PENDIENTE DE IMPLEMENTAR
+							className="btn disabled"
+							// onClick={() => actions.onSend(state.id)}
 						>
 							<i className="far fa-paper-plane" />
 						</button>

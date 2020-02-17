@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Minutas } from "../component/minutas.js";
 import "../../styles/home.scss";
 import { Context } from "./../store/appContext";
+import { Redirect } from "react-router";
 
 export const Principal = () => {
 	const { store, actions } = useContext(Context);
@@ -10,6 +11,19 @@ export const Principal = () => {
 	useEffect(() => {
 		actions.getFilteredMinutas("http://localhost:5000/api/meetings");
 	}, []);
+
+	const getLastMeeting = () => {
+		let UMeetings = [];
+		if (store.userMeetings) {
+			UMeetings = store.userMeetings;
+			UMeetings.sort(function(a, b) {
+				let dateA = new Date(a.create_date),
+					dateB = new Date(b.create_date);
+				return dateA - dateB;
+			});
+		}
+		actions.saveMeetingId(UMeetings[UMeetings.length - 1].id);
+	};
 
 	return (
 		<div className="container">
@@ -34,9 +48,8 @@ export const Principal = () => {
 					</div>
 					<div className="col-4" />
 					<div className="col-4 d-flex justify-content-end">
-						{/* COMO SELECCIONAR LA ULTIMA MINUTA GUARDADA A CONTINUACIÓN? */}
-						<Link className="btn p-0 border-0" to={"/memodetails/" + ""}>
-							<button type="button" className="btn btn-outline-dark">
+						<Link className="btn p-0 border-0" to={"/memodetails/" + store.currentMeetingId}>
+							<button type="button" className="btn btn-outline-dark" onClick={() => getLastMeeting()}>
 								Abrir última minuta
 							</button>
 						</Link>
@@ -62,9 +75,9 @@ export const Principal = () => {
 				<div className="row">
 					<div className="col-12" aria-expanded="true">
 						<ul className="list-group pull-down" id="minuta-list">
-							{!!store.meetings &&
-								store.meetings.map((item, i) => {
-									return <Minutas memo={item} key={i} index={i} />;
+							{!!store.userMeetings &&
+								store.userMeetings.map((item, i) => {
+									return <Minutas meeting={item} key={i} index={i} />;
 								})}
 						</ul>
 					</div>

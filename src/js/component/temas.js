@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
@@ -6,16 +6,23 @@ import { Context } from "./../store/appContext";
 
 export const Temas = props => {
 	const { store, actions } = useContext(Context);
-	const [topic, setTopic] = useState(props.item);
+	const [changingTopic, setChangingTopic] = useState(props.topic);
 
-	function handleChangeTopic(e, name) {
-		const data = Object.assign({}, topic);
-		data[name] = e.target.value;
-		setTopic(data);
+	useEffect(
+		() => {
+			setChangingTopic(props.topic);
+		},
+		[props.topic]
+	);
+
+	function handleChangeInput(e) {
+		const data = Object.assign({}, changingTopic);
+		data[e.target.name] = e.target.value;
+		setChangingTopic(data);
 	}
 
 	function alreadyChecked() {
-		if (props.item.title != "" && props.item.priority != "") {
+		if (props.topic.title != "" && props.topic.priority != "") {
 			return true;
 		}
 		return false;
@@ -44,10 +51,16 @@ export const Temas = props => {
 				</div>
 				<div className="row w-100 m-0">
 					<div className="col-md-2 px-0">
-						<input type="text" value={topic.title} onChange={e => handleChangeTopic(e, "title")} />
+						<input
+							type="text"
+							name="title"
+							value={changingTopic.title}
+							onChange={e => handleChangeInput(e)}
+						/>
+						<p>{changingTopic.title}</p>
 					</div>
 					<div className="col-md-1 d-flex align-item-center d-flex justify-content-center px-0">
-						<select value={topic.priority} onChange={e => handleChangeTopic(e, "priority")}>
+						<select name="priority" value={changingTopic.priority} onChange={e => handleChangeInput(e)}>
 							<option value="" />
 							<option value="Alta">Alta</option>
 							<option value="Media">Media</option>
@@ -57,30 +70,41 @@ export const Temas = props => {
 					<div className="col-md-4 pl-0">
 						<input
 							type="text"
-							value={topic.notes}
-							onChange={e => handleChangeTopic(e, "notes")}
+							name="notes"
+							value={changingTopic.notes}
+							onChange={e => handleChangeInput(e)}
 							style={{ width: "100%" }}
 						/>
 					</div>
 					<div className="col-md-2 px-0">
-						<input type="text" value={topic.care} onChange={e => handleChangeTopic(e, "care")} />
+						<input
+							type="text"
+							name="care"
+							value={changingTopic.care}
+							onChange={e => handleChangeInput(e)}
+						/>
 					</div>
 					<div className="col-md-2">
-						<input type="date" value={topic.tracking} onChange={e => handleChangeTopic(e, "tracking")} />
+						<input
+							type="date"
+							name="tracking"
+							value={changingTopic.tracking}
+							onChange={e => handleChangeInput(e)}
+						/>
 					</div>
 					<div className="col-md-1">
 						<i
-							className={"fas fa-check" + (alreadyChecked() ? "-double" : "")}
+							className={"fas fa-check" + (alreadyChecked() ? "-double disabled" : "")}
 							style={{ paddingLeft: "7px" }}
 							onClick={() => {
-								actions.onUpdateTopic(topic, topic.id);
+								actions.onUpdateTopic(changingTopic, props.topic.id);
 							}}
 						/>{" "}
 						<i
 							className="fa fa-trash"
 							style={{ paddingLeft: "7px", paddingRight: "5px" }}
 							onClick={() => {
-								actions.onDeleteTopic(topic.id);
+								actions.onDeleteTopic(props.topic.id);
 							}}
 						/>
 					</div>
@@ -91,10 +115,6 @@ export const Temas = props => {
 };
 
 Temas.propTypes = {
-	update: PropTypes.func,
-	delete: PropTypes.func,
-	checked: PropTypes.func,
-
 	id: PropTypes.number,
 	meeting_id: PropTypes.number,
 	title: PropTypes.string,

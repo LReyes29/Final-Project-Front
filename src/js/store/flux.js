@@ -5,20 +5,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 			currentUserId: 1,
 			currentMeetingId: null,
 			meetings: []
-			////
-			currentUserId: 2,
-			currentUserName: "Luis Reyes",
-			////
-			userMeetings: [],
-			////
-			currentMeetingId: "",
-			currentMeeting: {}
-			////
-			//currentTopicId: "",
-			//currentTopic: {}
 		},
 
 		actions: {
+			putCurrentUser: (id, user) => {
+				setStore({
+					currentUserId: id,
+					currentUserName: user
+				});
+			},
+
 			getMinutas: url => {
 				fetch(url, {
 					method: "GET",

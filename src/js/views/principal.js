@@ -75,15 +75,9 @@ export const Principal = () => {
 				<div className="row">
 					<div className="col-12" aria-expanded="true">
 						<ul className="list-group pull-down" id="minuta-list">
-<<<<<<< HEAD
-							{!!store.meetings &&
-								store.meetings.map((item, i) => {
-									return <Minutas memo={item} key={i} index={i} />;
-=======
 							{!!store.userMeetings &&
 								store.userMeetings.map((item, i) => {
 									return <Minutas meeting={item} key={i} index={i} />;
->>>>>>> c02a3a25de05400f707bd97f597dc81fe8f15652
 								})}
 						</ul>
 					</div>

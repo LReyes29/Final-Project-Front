@@ -2,8 +2,8 @@ import React, { useContext, useEffect } from "react";
 import "../../styles/landing.css";
 import { Context } from "./../store/appContext";
 import Login from "../component/login.js";
-import Logo from "../../img/logo.png";
 import favicon from "../../img/favicon.png";
+import getState from "../store/flux.js";
 
 export const Home = () => {
 	return (

@@ -1,86 +1,42 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			user_id: 1,
-			metings: [
-				{
-					meeting_id: 0,
-					create_date: "4-02-2020",
-					description: "descripcion4",
-					guests: [],
-					meeting_date: "4-01-2020",
-					meeting_hour: "4:00 pm",
-					place: "place4",
-					project_name: "proyecto4",
-					target: "target4",
-					title: "title4",
-					topics: [
-						{
-							id: 0,
-							care: "care77",
-							duration: "duration5",
-							notes: "notes5",
-							priority: "priority5",
-							title: "title5",
-							tracking: "tracking5",
-							meeting_id: 1
-						},
-						{
-							id: 1,
-							care: "care88",
-							duration: "duration6",
-							notes: "notes6",
-							priority: "priority6",
-							title: "title6",
-							tracking: "tracking6",
-							meeting_id: 1
-						}
-					]
-				},
-				{
-					meeting_id: 1,
-					create_date: "4-02-2020",
-					description: "descripcion4",
-					guests: [],
-					meeting_date: "4-01-2020",
-					meeting_hour: "4:00 pm",
-					place: "place4",
-					project_name: "proyecto4",
-					target: "target4",
-					title: "title4",
-					topics: [
-						{
-							id: 0,
-							care: "care77",
-							duration: "duration5",
-							notes: "notes5",
-							priority: "priority5",
-							title: "title5",
-							tracking: "tracking5",
-							meeting_id: 1
-						},
-						{
-							id: 1,
-							care: "care88",
-							duration: "duration6",
-							notes: "notes6",
-							priority: "priority6",
-							title: "title6",
-							tracking: "tracking6",
-							meeting_id: 1
-						}
-					]
-				}
-			]
+			currentUserName: "Luis Reyes",
+			currentUserId: 1,
+			currentMeetingId: null,
+			meetings: []
 		},
 		actions: {
 			getMinutas: url => {
-				fetch(url)
+				fetch(url, {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json"
+					}
+				})
 					.then(resp => resp.json())
-					.then(data => setStore({ data }));
+					.then(data => setStore({ meetings: data }));
+			},
+			getFilteredMinutas: url => {
+				fetch(url, {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json"
+					}
+				})
+					.then(resp => resp.json())
+					.then(data => {
+						const store = getStore();
+						let filteredMeetings = data.filter(item => {
+							return item.user_id == store.currentUserId;
+						});
+						setStore({
+							meetings: filteredMeetings
+						});
+					});
 			},
 
-			onCreate: data => {
+			onCreateMeeting: data => {
 				fetch("#", {
 					method: "POST",
 					body: JSON.stringify(data),
@@ -89,11 +45,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 				})
 					.then(resp => resp.json())
-					.then(() => getActions().getMinutas("#"));
+					.then(() => getFilteredMinutas("#"));
 			},
-
-			onUpdate: (data, id) => {
-				fetch("#" + id, {
+			onUpdateMeeting: (data, id) => {
+				fetch("http://localhost:5000/api/meetings/" + id, {
 					method: "PUT",
 					body: JSON.stringify(data),
 					headers: {
@@ -101,24 +56,51 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 				})
 					.then(resp => resp.json())
-					.then(() => getActions().getMinutas("#"));
+					.then(() => getActions().getFilteredMinutas("http://localhost:5000/api/meetings"));
 			},
-
-			onDelete: id => {
-				fetch("#" + id, {
+			onDeleteMeeting: id => {
+				fetch("http://localhost:5000/api/meetings/" + id, {
 					method: "DELETE",
 					headers: {
 						"Content-Type": "application/json"
 					}
 				})
 					.then(resp => resp.json())
-					.then(() => getActions().getMinutas("#"));
+					.then(() => getActions().getFilteredMinutas("http://localhost:5000/api/meetings"));
 			},
 
-			handleChange: e => {
-				e.preventDefault();
-				setStore({ [e.target.name]: e.target.value });
+			onUpdateTopic: (data, id) => {
+				fetch("http://localhost:5000/api/topics/" + id, {
+					method: "PUT",
+					body: JSON.stringify(data),
+					headers: {
+						"Content-Type": "application/json"
+					}
+				})
+					.then(resp => resp.json())
+					.then(() => getActions().getFilteredMinutas("http://localhost:5000/api/meetings"));
+			},
+			onDeleteTopic: id => {
+				fetch("http://localhost:5000/api/topics/" + id, {
+					method: "DELETE",
+					headers: {
+						"Content-Type": "application/json"
+					}
+				})
+					.then(resp => resp.json())
+					.then(() => getActions().getFilteredMinutas("http://localhost:5000/api/meetings"));
 			}
+
+			// getMeetingId: id => {
+			// 	// let meet = document.getElementById(e.target.id);
+			// 	// let id = meet.id;
+			// 	setStore({ currentMeetingId: id });
+			// 	console.log(getStore().currentMeetingId);
+			// },
+
+			// handleChange: e => {
+			// 	setStore({ [e.target.name]: e.target.value });
+			// }
 
 			// onSend: id => {
 			// }

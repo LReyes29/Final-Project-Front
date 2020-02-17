@@ -4,13 +4,11 @@ import { Minutas } from "../component/minutas.js";
 import "../../styles/home.scss";
 import { Context } from "./../store/appContext";
 
-export const Principal = props => {
+export const Principal = () => {
 	const { store, actions } = useContext(Context);
-	// const [state, setState] = useState({
-	// });
 
 	useEffect(() => {
-		//actions.getMinutas("#" + props.match.params.id);
+		// actions.getFilteredMinutas("http://localhost:5000/api/meetings");
 	}, []);
 
 	return (
@@ -66,10 +64,7 @@ export const Principal = props => {
 						<ul className="list-group pull-down" id="minuta-list">
 							{!!store.meetings &&
 								store.meetings.map((item, i) => {
-									if (item.user_id == 1) {
-										//CONDICIONAR EL MAP AL CURRENT USER EN VEZ DE 1
-										return <Minutas memo={item} key={i} index={i} />;
-									}
+									return <Minutas memo={item} key={i} index={i} />;
 								})}
 						</ul>
 					</div>

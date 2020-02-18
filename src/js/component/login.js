@@ -53,30 +53,27 @@ class Login extends React.Component {
 
 	onSubmitLogin = e => {
 		e.preventDefault();
+		const contexto = this.context;
+
+		var url = "http://127.0.0.1:5000/user/login";
+
 		let form = {
 			email: this.state.email,
 			password: this.state.password
 		};
 
-		{
-			/*
-				database.push(form);
-				Aqui se manda a la api y devuelve un user id
-				database.push(form);
-				return user_id,
-			*/
-		}
-
-		let new_user_id = 16;
-
-		if (this.state.password) {
-			this.setState({
-				user_id: new_user_id,
-				name: this.state.name,
-				email: this.state.email,
-				password: this.state.password,
-				red: true
-			});
+		if (form.email != null && form.password != null) {
+			fetch(url, {
+				method: "POST", // or 'PUT'
+				body: JSON.stringify(form), // data can be `string` or {object}!
+				headers: {
+					"Content-Type": "application/json"
+				}
+			})
+				.then(res => res.json())
+				.then(response => contexto.actions.putCurrentUser(response.id, response.fullname))
+				.catch(error => console.error("Error:", error));
+			this.setState({ red: true });
 		}
 	};
 

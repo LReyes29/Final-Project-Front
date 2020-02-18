@@ -2,7 +2,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			////
-			currentUserId: 3,
+			currentUserId: 1,
 			currentUserName: "Luis Reyes",
 			////
 			userMeetings: [],
@@ -123,20 +123,18 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			onCreateTopic: data => {
-				if (data.title != "") {
-					const store = getStore();
-					const newMeeting = store.currentMeeting;
-					newMeeting.topics.push(data);
-					fetch("http://localhost:5000/api/meetings/" + store.currentMeetingId, {
-						method: "PUT",
-						body: JSON.stringify(newMeeting),
-						headers: {
-							"Content-Type": "application/json"
-						}
-					})
-						.then(resp => resp.json())
-						.then(() => getActions().getFilteredMinutas("http://localhost:5000/api/meetings"));
-				} else alert("Debes ingresar un título antes de ingresar este tema");
+				const store = getStore();
+				const newMeeting = store.currentMeeting;
+				newMeeting.topics.push(data);
+				fetch("http://localhost:5000/api/meetings/" + store.currentMeetingId, {
+					method: "PUT",
+					body: JSON.stringify(newMeeting),
+					headers: {
+						"Content-Type": "application/json"
+					}
+				})
+					.then(resp => resp.json())
+					.then(() => getActions().getFilteredMinutas("http://localhost:5000/api/meetings"));
 			},
 
 			onUpdateTopic: (data, id) => {
@@ -177,7 +175,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			onSendMeeting: data => {
-				console.log(data);
 				fetch("http://localhost:5000/api/sendMail", {
 					method: "POST",
 					body: JSON.stringify(data),
@@ -185,8 +182,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 						"Content-Type": "application/json"
 					}
 				})
-					.then(resp => resp.json())
-					.then(() => alert("Se ha enviado un correo a sus invitados con los temas de esta reunión"))
+					.then(resp => resp.json()) ///// ALERTA 4
+					.then(data => console.log(data))
 					.catch(error => console.log(error));
 			}
 		}

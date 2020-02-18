@@ -50,7 +50,7 @@ export const Principal = () => {
 					<div className="col-4 d-flex justify-content-end">
 						<Link className="btn p-0 border-0" to={"/memodetails/" + store.currentMeetingId}>
 							<button type="button" className="btn btn-outline-dark" onClick={() => getLastMeeting()}>
-								Abrir última minuta
+								Abrir última minuta creada
 							</button>
 						</Link>
 					</div>
@@ -59,21 +59,21 @@ export const Principal = () => {
 
 			<div className="container" style={{ marginTop: "20px" }}>
 				<div className="row">
-					<div className="col-3 text-center text-sm-left">
-						<h2>Fecha Reunión</h2>
+					<div className="col-2 text-sm-left p-0">
+						<h2>Fecha</h2>
 					</div>
-					<div className="col-3 text-center text-sm-left">
+					<div className="col-3 text-sm-left p-0">
 						<h2>Título</h2>
 					</div>
-					<div className="col-3 text-center text-sm-left">
+					<div className="col-4 text-sm-left p-0">
 						<h2>Descripción</h2>
 					</div>
-					<div className="col-3 text-center text-sm-left">
+					<div className="col-3 text-center p-0 pr-4">
 						<h2>Acciones</h2>
 					</div>
 				</div>
 				<div className="row">
-					<div className="col-12" aria-expanded="true">
+					<div className="col-12 p-0" aria-expanded="true">
 						<ul className="list-group pull-down" id="minuta-list">
 							{!!store.userMeetings &&
 								store.userMeetings.map((item, i) => {

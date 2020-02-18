@@ -6,6 +6,7 @@ import Countdown, { zeroPad } from "react-countdown-now";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { Temas } from "../component/temas.js";
+import { Alert } from "../component/alert.js";
 import "../../styles/home.scss";
 import { Context } from "../store/appContext";
 
@@ -24,6 +25,12 @@ export const MemoDetails = props => {
 
 	const [time, setTime] = useState(0);
 	const [clockRef, setClockRef] = useState(null);
+	const [alert, setAlert] = useState({
+		meetingOnPause: false,
+		meetingOnComplete: false,
+		topicNoTitle: false,
+		topicNoTitleNoPriority: false
+	});
 
 	useEffect(
 		() => {
@@ -38,7 +45,7 @@ export const MemoDetails = props => {
 			store.currentMeeting.topics.forEach(item => {
 				sum_time += item.duration;
 			});
-			setTime(sum_time);
+			setTime(Date.now() + sum_time * 60000);
 		}
 	}, []);
 
@@ -50,11 +57,21 @@ export const MemoDetails = props => {
 		clockRef.pause();
 	}
 
-	// function handleChange(e, name) {
-	// 	const copy_array = Object.assign({}, meeting);
-	// 	copy_array[name] = e.target.value;
-	// 	setMeeting(copy_array);
-	// }
+	function returnBaseState() {
+		if (alert.meetingOnPause == true) {
+			setAlert({
+				meetingOnPause: false
+			});
+			start();
+		} else if (alert.topicNoTitle == true)
+			setAlert({
+				topicNoTitle: false
+			});
+		else if (alert.topicNoTitleNoPriority == true)
+			setAlert({
+				topicNoTitleNoPriority: false
+			});
+	}
 
 	function handleChangeNewTopic(e) {
 		const nT = Object.assign({}, newTopic);
@@ -62,34 +79,30 @@ export const MemoDetails = props => {
 		setNewTopic(nT);
 	}
 
-	// function onCreateTopic(data) {
-	// 	if (data.title) {
-	// 		const copy_array = Object.assign({}, meeting);
-	// 		copy_array.topics.push(data);
-	// 		setMeeting(copy_array);
-	// 		actions.onUpdateMeeting(meeting, props.match.params.id);
-	// 	} else {
-	// 		alert("Debes ingresar un título antes de ingresar este tema");
-	// 	}
-	// }
+	function onCreateTopic(data) {
+		if (data.title != "") {
+			actions.onCreateTopic(data);
+			setNewTopic({
+				id: 0,
+				title: "",
+				priority: "",
+				notes: "",
+				care: "",
+				tracking: "",
+				duration: 0
+			});
+		} else {
+			setAlert({ topicNoTitle: true });
+		}
+	}
 
-	// function onUpdateTopic(id, data) {
-	// 	const copy_array = Object.assign({}, meeting);
-	// 	const index = meeting.topics.findIndex((item, i) => {
-	// 		return item.id == id;
-	// 	});
-	// 	copy_array.topics[index] = data;
-	// 	setMeeting(copy_array);
-	// 	actions.onUpdate(meeting, props.match.params.id);
-	// }
-
-	// function onDeleteTopic(id) {
-	// 	// 	const copy_array = Object.assign({}, meeting);
-	// 	// 	copy_array.topics = copy_array.topics.filter(item => {
-	// 	// 		return item.id !== id;
-	// 	// 	});
-	// 	// 	setMeeting(copy_array);
-	//  //  }
+	function onUpdateTopic(data, id) {
+		if (data.title != "" && data.priority != "") {
+			actions.onUpdateTopic(data, id);
+		} else {
+			setAlert({ topicNoTitleNoPriority: true });
+		}
+	}
 
 	return (
 		<>
@@ -196,29 +209,25 @@ export const MemoDetails = props => {
 							<h1>
 								<Countdown
 									id="meeting_counter"
-									date={Date.now() + time * 60000}
+									date={time}
 									ref={ref => setClockRef(ref)}
 									autoStart={false}
 									daysInHours
-									onPause={() => {
-										return alert("La reunión se encuentra detenida");
-									}}
-									OnComplete={() => {
-										return alert("La reunión ha finalizado. Muchas gracias");
-									}}
+									onPause={() => setAlert({ meetingOnPause: true })}
+									onComplete={() => setAlert({ meetingOnComplete: true })}
 								/>
 							</h1>
 						</div>
 						<div className="d-block d-flex justify-content-lg-center">
 							<button
-								className="btn btn-success"
+								className={"btn btn-success " + (alert.meetingOnPause == true ? "disabled" : "")}
 								type="button"
 								onClick={() => start()}
 								style={{ margin: "5px" }}>
 								Iniciar
 							</button>
 							<button
-								className="btn btn-danger"
+								className={"btn btn-danger " + (alert.meetingOnPause == true ? "disabled" : "")}
 								type="button"
 								onClick={() => pause()}
 								style={{ margin: "5px" }}>
@@ -230,14 +239,14 @@ export const MemoDetails = props => {
 			</div>
 
 			<div className="container" style={{ padding: "5px" }}>
-				<div className="row" style={{ margin: "0px", marginTop: "30px" }}>
+				<div className="row" style={{ margin: "0px", marginTop: "10px" }}>
 					<div className="col-12" style={{ paddingRight: "5px", paddingLeft: "5px" }}>
 						<form>
 							<div className="form-group row">
 								<label htmlFor="inputDescription" className="col-sm-2 col-form-label">
 									Descripción:
 								</label>
-								<div className="col-sm-10">
+								<div className="col-sm-9">
 									<input
 										type="text"
 										name="description"
@@ -252,7 +261,7 @@ export const MemoDetails = props => {
 								<label htmlFor="inputTarget" className="col-sm-2 col-form-label">
 									Objetivo:
 								</label>
-								<div className="col-sm-10">
+								<div className="col-sm-9">
 									<input
 										type="text"
 										name="target"
@@ -268,8 +277,31 @@ export const MemoDetails = props => {
 				</div>
 			</div>
 
+			<div>
+				{alert.meetingOnPause == true ? (
+					<Alert
+						type="warning"
+						strong="Atención"
+						message="La reunión se encuentra detenida"
+						returnState={returnBaseState}
+					/>
+				) : (
+					""
+				)}
+				{alert.meetingOnComplete == true ? (
+					<Alert
+						type="danger"
+						strong="Atención"
+						message="La reunión ha terminado, muchas gracias por su asistencia"
+						returnState={returnBaseState}
+					/>
+				) : (
+					""
+				)}
+			</div>
+
 			<div className="container" style={{ padding: "0px" }}>
-				<div className="row" style={{ margin: "0px", marginTop: "20px" }}>
+				<div className="row" style={{ margin: "0px", marginTop: "10px" }}>
 					<div className="col">
 						<h4 className="justify-content-center align-content-center">Participantes</h4>
 						<ul className="list-group">
@@ -312,13 +344,13 @@ export const MemoDetails = props => {
 				</div>
 			</div>
 
-			<div className="container" style={{ padding: "5px" }}>
+			<div className="container" style={{ marginTop: "30px", padding: "0px" }}>
 				<h4>Revisión de Temas:</h4>
-				<div className="row" style={{ margin: "0px", marginTop: "20px" }}>
+				<div className="row" style={{ margin: "0px" }}>
 					<div className="col">
 						{!!store.currentMeeting.topics &&
 							store.currentMeeting.topics.map((item, i) => {
-								return <Temas topic={item} key={i} />;
+								return <Temas topic={item} key={i} update={onUpdateTopic} />;
 							})}
 
 						<li className="list-group-item p-1">
@@ -390,7 +422,7 @@ export const MemoDetails = props => {
 										className={"fas fa-plus"}
 										style={{ paddingLeft: "7px" }}
 										onClick={() => {
-											actions.onCreateTopic(newTopic);
+											onCreateTopic(newTopic);
 											setNewTopic({
 												id: 0,
 												title: "",
@@ -407,6 +439,29 @@ export const MemoDetails = props => {
 						</li>
 					</div>
 				</div>
+			</div>
+
+			<div>
+				{alert.topicNoTitleNoPriority == true ? (
+					<Alert
+						type="primary"
+						strong="Atención,"
+						message="Debe asignarle una prioridad al tema antes de guardarlo"
+						returnState={returnBaseState}
+					/>
+				) : (
+					""
+				)}
+				{alert.topicNoTitle == true ? (
+					<Alert
+						type="primary"
+						strong="Atención,"
+						message="Debe ingresar el título del tema antes de guardarlo"
+						returnState={returnBaseState}
+					/>
+				) : (
+					""
+				)}
 			</div>
 
 			<div className="row" style={{ margin: "0px", marginLeft: "0px", marginTop: "20px" }}>

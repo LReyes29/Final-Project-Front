@@ -57,7 +57,6 @@ export const Temas = props => {
 							value={changingTopic.title}
 							onChange={e => handleChangeInput(e)}
 						/>
-						<p>{changingTopic.title}</p>
 					</div>
 					<div className="col-md-1 d-flex align-item-center d-flex justify-content-center px-0">
 						<select name="priority" value={changingTopic.priority} onChange={e => handleChangeInput(e)}>

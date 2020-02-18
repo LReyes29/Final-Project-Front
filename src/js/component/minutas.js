@@ -7,6 +7,20 @@ import { Context } from "./../store/appContext";
 export const Minutas = props => {
 	const { store, actions, setStore } = useContext(Context);
 
+	function sendData(id) {
+		const currentMeet = store.userMeetings.filter(item => {
+			return item.id == id;
+		});
+		let data = {};
+		data.title = currentMeet[0].title;
+		data.topics = currentMeet[0].topics;
+		data.guest_mails = currentMeet[0].guests.map((item, i) => {
+			return item.email;
+		});
+
+		actions.onSendMeeting(data);
+	}
+
 	return (
 		<>
 			<li className="list-group-item p-1">
@@ -32,10 +46,7 @@ export const Minutas = props => {
 						<button className="btn" onClick={() => actions.onDeleteMeeting(props.meeting.id)}>
 							<i className="fas fa-trash" />
 						</button>
-						<button
-							className="btn disabled"
-							// onClick={() => actions.onSend(state.id)}
-						>
+						<button className="btn" onClick={() => sendData(props.meeting.id)}>
 							<i className="far fa-paper-plane" />
 						</button>
 					</div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 
@@ -25,17 +25,19 @@ export const Layout = () => {
 		<div className="d-flex flex-column h-100">
 			<BrowserRouter>
 				<ScrollToTop>
-					<Navbar />
 					<Switch>
-						<Route exact path="/newmeeting/:id" component={NewMeeting} />
-						<Route exact path="/newmeeting" component={NewMeeting} />
-						<Route exact path="/memodetails/:id" component={MemoDetails} />
-						<Route exact path="/memodetails" component={MemoDetails} />
-						<Route exact path="/payment" component={Payment} />
-						<Route exact path="/myprofile" component={MyProfile} />
-						<Route exact path="/principal" component={Principal} />
 						<Route exact path="/" component={Home} />
-						<Route render={() => <h1>Not found!</h1>} />
+						<Fragment>
+							<Navbar />
+							<Route exact path="/newmeeting/:id" component={NewMeeting} />
+							<Route exact path="/newmeeting" component={NewMeeting} />
+							<Route exact path="/memodetails/:id" component={MemoDetails} />
+							<Route exact path="/memodetails" component={MemoDetails} />
+							<Route exact path="/payment" component={Payment} />
+							<Route exact path="/myprofile" component={MyProfile} />
+							<Route exact path="/principal" component={Principal} />
+							<Route render={() => <h1>Not found!</h1>} />
+						</Fragment>
 					</Switch>
 					<Footer />
 				</ScrollToTop>

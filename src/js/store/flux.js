@@ -2,7 +2,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			////
-			currentUserId: 2,
+			currentUserId: 3,
 			currentUserName: "Luis Reyes",
 			////
 			userMeetings: [],
@@ -81,7 +81,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			onCreateMeeting: data => {
-				// LA VA A OCUPAR ANDRES DUMAS PARA CREAR LAS REUNIONES EN LA API
 				fetch("http://localhost:5000/api/meetings/", {
 					method: "POST",
 					body: JSON.stringify(data),
@@ -106,6 +105,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			onDeleteMeeting: id => {
+				const store = getStore();
+				const dM = store.userMeetings;
+				const restOfThem = store.userMeetings.filter(item => {
+					return item.id !== id;
+				});
+				dM = restOfThem;
+				setStore({ userMeetings: dM });
 				fetch("http://localhost:5000/api/meetings/" + id, {
 					method: "DELETE",
 					headers: {
@@ -168,10 +174,21 @@ const getState = ({ getStore, getActions, setStore }) => {
 				})
 					.then(resp => resp.json())
 					.then(() => getActions().getFilteredMinutas("http://localhost:5000/api/meetings"));
-			}
+			},
 
-			// onSendMeeting: id => {
-			// }
+			onSendMeeting: data => {
+				console.log(data);
+				fetch("http://localhost:5000/api/sendMail", {
+					method: "POST",
+					body: JSON.stringify(data),
+					headers: {
+						"Content-Type": "application/json"
+					}
+				})
+					.then(resp => resp.json())
+					.then(() => alert("Se ha enviado un correo a sus invitados con los temas de esta reunión"))
+					.catch(error => console.log(error));
+			}
 		}
 	};
 };

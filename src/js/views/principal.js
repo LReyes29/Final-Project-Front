@@ -3,14 +3,27 @@ import { Link } from "react-router-dom";
 import { Minutas } from "../component/minutas.js";
 import "../../styles/home.scss";
 import { Context } from "./../store/appContext";
+import { Redirect } from "react-router";
 
 export const Principal = () => {
 	const { store, actions } = useContext(Context);
-	const [state, setState] = useState({});
 
 	useEffect(() => {
-		//actions.getMinutas("#" + props.match.params.id);
+		actions.getFilteredMinutas("http://localhost:5000/api/meetings");
 	}, []);
+
+	const getLastMeeting = () => {
+		let UMeetings = [];
+		if (store.userMeetings) {
+			UMeetings = store.userMeetings;
+			UMeetings.sort(function(a, b) {
+				let dateA = new Date(a.create_date),
+					dateB = new Date(b.create_date);
+				return dateA - dateB;
+			});
+		}
+		actions.saveMeetingId(UMeetings[UMeetings.length - 1].id);
+	};
 
 	return (
 		<div className="container">
@@ -34,10 +47,12 @@ export const Principal = () => {
 						</span>
 					</div>
 					<div className="col-4" />
-					<div className="col-4">
-						<button type="button" className="btn btn-outline-dark float-right">
-							Abrir última minuta
-						</button>
+					<div className="col-4 d-flex justify-content-end">
+						<Link className="btn p-0 border-0" to={"/memodetails/" + store.currentMeetingId}>
+							<button type="button" className="btn btn-outline-dark" onClick={() => getLastMeeting()}>
+								Abrir última minuta
+							</button>
+						</Link>
 					</div>
 				</div>
 			</div>
@@ -45,7 +60,7 @@ export const Principal = () => {
 			<div className="container" style={{ marginTop: "20px" }}>
 				<div className="row">
 					<div className="col-3 text-center text-sm-left">
-						<h2>Fecha</h2>
+						<h2>Fecha Reunión</h2>
 					</div>
 					<div className="col-3 text-center text-sm-left">
 						<h2>Título</h2>
@@ -60,20 +75,10 @@ export const Principal = () => {
 				<div className="row">
 					<div className="col-12" aria-expanded="true">
 						<ul className="list-group pull-down" id="minuta-list">
-							{store.minutas.map((item, i) => {
-								return (
-									<Minutas
-										id={item.id}
-										date={item.date}
-										title={item.title}
-										description={item.description}
-										duration={item.duration}
-										topics_num={item.topics_num}
-										key={i}
-										index={i}
-									/>
-								);
-							})}
+							{!!store.userMeetings &&
+								store.userMeetings.map((item, i) => {
+									return <Minutas meeting={item} key={i} index={i} />;
+								})}
 						</ul>
 					</div>
 				</div>

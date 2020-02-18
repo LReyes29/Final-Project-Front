@@ -83,16 +83,20 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.then(data => setStore({ data: data }));
 			},
 
-			onCreate: data => {
-				fetch("#", {
+			onCreate: (url, data) => {
+				console.log(data);
+				fetch(url, {
 					method: "POST",
 					body: JSON.stringify(data),
 					headers: {
 						"Content-Type": "application/json"
 					}
+					// mode: "no-cors"
 				})
 					.then(resp => resp.json())
-					.then(() => getActions().getMinutas("#"));
+					.then(respjson => console.log(respjson))
+					// .then(() => getActions().getMinutas("#"))
+					.catch(error => console.log(error));
 			},
 
 			onUpdate: (data, id) => {

@@ -89,7 +89,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 				})
 					.then(resp => resp.json())
-					.then(() => getActions().getFilteredMinutas("http://localhost:5000/api/meetings"));
+					.then(() => getActions().getFilteredMinutas("http://localhost:5000/api/meetings"))
+					.catch(error=>console.log(error));
 			},
 
 			onUpdateMeeting: (data, id) => {

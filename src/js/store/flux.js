@@ -1,92 +1,91 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			////
-			currentUserId: 1,
-			currentUserName: "Luis Reyes",
-			////
-			userMeetings: [],
-			////
-			currentMeetingId: "",
-			currentMeeting: {}
-			////
-			//currentTopicId: "",
-			//currentTopic: {}
+			minutas: [
+				{
+					id: "1",
+					date: "04-02-2020",
+					title: "test1",
+					description: "test1_description",
+					duration: "1",
+					topics_num: "1"
+				},
+				{
+					id: "2",
+					date: "05-02-2020",
+					title: "test2",
+					description: "test2_description",
+					duration: "2",
+					topics_num: "2"
+				},
+				{
+					id: "3",
+					date: "06-02-2020",
+					title: "test3",
+					description: "test3_description",
+					duration: "3",
+					topics_num: "3"
+				},
+				{
+					id: "4",
+					date: "07-02-2020",
+					title: "test4",
+					description: "test4_description",
+					duration: "4",
+					topics_num: "4"
+				},
+				{
+					id: "5",
+					date: "08-02-2020",
+					title: "test3",
+					description: "test3_description",
+					duration: "3",
+					topics_num: "3"
+				},
+				{
+					id: "6",
+					date: "09-02-2020",
+					title: "test4",
+					description: "test4_description",
+					duration: "4",
+					topics_num: "4"
+				}
+			]
 		},
-
 		actions: {
+			// // Use getActions to call a function within a fuction
+			// exampleFunction: () => {
+			// 	getActions().changeColor(0, "green");
+			// },
+			// loadSomeData: () => {
+			// 	/**
+			// 		fetch().then().then(data => setStore({ "foo": data.bar }))
+			// 	*/
+			// },
+			// changeColor: (index, color) => {
+			// 	//get the store
+			// 	const store = getStore();
+
+			// 	//we have to loop the entire demo array to look for the respective index
+			// 	//and change its color
+			// 	const demo = store.demo.map((elm, i) => {
+			// 		if (i === index) elm.background = color;
+			// 		return elm;
+			// 	});
+
+			// 	//reset the global store
+			// 	setStore({ demo: demo });
+			// },
+
 			getMinutas: url => {
-				fetch(url, {
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json"
-					}
-				})
+				fetch(url)
 					.then(resp => resp.json())
-					.then(data => setStore({ UserMeetings: data }));
+					.then(data => setStore({ data: data }));
 			},
-
-			getFilteredMinutas: url => {
-				fetch(url, {
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json"
-					}
-				})
-					.then(resp => resp.json())
-					.then(data => {
-						const store = getStore();
-						let filteredMeetings = data.filter(item => {
-							return item.user_id == store.currentUserId;
-						});
-						setStore({
-							userMeetings: filteredMeetings
-						});
-					});
-			},
-
 
 			onCreate: (url, data) => {
 				console.log(data);
 				fetch(url, {
-
-			saveMeetingId: id => {
-				setStore({ currentMeetingId: id });
-			},
-
-			getCurrentMeeting: () => {
-				const store = getStore();
-				let cMeeting = store.userMeetings.filter(item => {
-					return item.id == store.currentMeetingId;
-				});
-				setStore({
-					currentMeeting: cMeeting[0]
-				});
-			},
-
-			handleChangeMeeting: e => {
-				const store = getStore();
-				const cM = store.currentMeeting;
-				cM[e.target.name] = e.target.value;
-				setStore({ currentMeeting: cM });
-			},
-
-			saveTopicId: id => {
-				setStore({ currentTopicId: id });
-			},
-
-			getCurrentTopic: () => {
-				const store = getStore();
-				let cTopic = store.currentMeeting.topics.filter(item => {
-					return item.id == store.currentTopicId;
-				});
-				setStore({
-					currentTopic: cTopic
-				});
-			},
-
-			onCreateMeeting: data => {
-				fetch("http://localhost:5000/api/meetings/", {
 					method: "POST",
 					body: JSON.stringify(data),
 					headers: {
@@ -99,8 +98,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.catch(error=>console.log(error));
 			},
 
-			onUpdateMeeting: (data, id) => {
-				fetch("http://localhost:5000/api/meetings/" + id, {
+			onUpdate: (data, id) => {
+				fetch("#" + id, {
 					method: "PUT",
 					body: JSON.stringify(data),
 					headers: {
@@ -108,25 +107,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 				})
 					.then(resp => resp.json())
-					.then(() => getActions().getFilteredMinutas("http://localhost:5000/api/meetings"));
-			},
-
-			onDeleteMeeting: id => {
-				const store = getStore();
-				const dM = store.userMeetings;
-				const restOfThem = store.userMeetings.filter(item => {
-					return item.id !== id;
-				});
-				dM = restOfThem;
-				setStore({ userMeetings: dM });
-				fetch("http://localhost:5000/api/meetings/" + id, {
-					method: "DELETE",
-					headers: {
-						"Content-Type": "application/json"
-					}
-				})
-					.then(resp => resp.json())
-					.then(() => getActions().getFilteredMinutas("http://localhost:5000/api/meetings"));
+					.then(() => getActions().getMinutas("#"));
 			},
 
 			onCreateTopic: data => {

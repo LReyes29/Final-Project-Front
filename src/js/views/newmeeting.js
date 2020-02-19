@@ -48,6 +48,7 @@ export const NewMeeting = props => {
 		copy_array[name] = e.target.value;
 		setTopic(copy_array);
 	}
+
 	// function onCreateTopic() {
 	// 	const copy_array = Object.assign({}, state);
 	// 	copy_array.topics.push({
@@ -63,6 +64,26 @@ export const NewMeeting = props => {
 	// 	setState(copy_array);
 	// 	// SE DEBE HACER UN FETCH POST Y LUEGO FETCH GET PARA QUE DEVUELVA EL NUEVO TOPIC CON UN ID ASIGNADO
 	// }
+
+	function saveAndSendData(data) {
+		actions.onCreateMeeting(data);
+
+		let newM = {};
+		newW.user = store.currentUserName;
+		newM.title = data.title;
+		//newM.description = data.description;
+		newM.meeting_date = data.meeting_date;
+		newM.meeting_hour = data.meeting_date;
+		newM.place = data.place;
+		newM.topics = data.topics;
+		newM.guest_mails = data.guests.map((item, i) => {
+			return item.email;
+		});
+    
+		actions.onSendInvitation(newM);
+	}
+
+
 	function handleChangeGuest(e, name, i) {
 		const copy_array = Object.assign({}, state);
 		copy_array.guests[i][name] = e.target.value;
@@ -376,10 +397,10 @@ export const NewMeeting = props => {
 						<Link className="" to="/principal">
 							<button
 								className="btn btn-primary mt-3"
-								type="button"
-								onClick={() => actions.onCreate("http://127.0.0.1:5000/api/meetings", state)}
+								type="button"		
+								onClick={() => saveAndSendData(state)}
 								style={{ marginLeft: "10px" }}>
-								Guardar
+								Guardar y Enviar Invitaciones
 							</button>
 						</Link>
 					</div>

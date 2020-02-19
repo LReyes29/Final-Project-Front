@@ -94,9 +94,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					// mode: "no-cors"
 				})
 					.then(resp => resp.json())
-					.then(respjson => console.log(respjson))
-					// .then(() => getActions().getMinutas("#"))
-					.catch(error => console.log(error));
+					.then(() => getActions().getFilteredMinutas("http://localhost:5000/api/meetings"))
+					.catch(error=>console.log(error));
 			},
 
 			onUpdate: (data, id) => {

@@ -45,6 +45,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 					});
 			},
 
+
+			onCreate: (url, data) => {
+				console.log(data);
+				fetch(url, {
+
 			saveMeetingId: id => {
 				setStore({ currentMeetingId: id });
 			},
@@ -87,6 +92,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					headers: {
 						"Content-Type": "application/json"
 					}
+					// mode: "no-cors"
 				})
 					.then(resp => resp.json())
 					.then(() => getActions().getFilteredMinutas("http://localhost:5000/api/meetings"))

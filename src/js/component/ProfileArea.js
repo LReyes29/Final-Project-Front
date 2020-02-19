@@ -94,9 +94,6 @@ class ProfileArea extends React.Component {
 					<div className="col-md-8">
 						<ul className="p-3">
 							<li className="pb-3">
-								<h3>id: {this.state.id}</h3>
-							</li>
-							<li className="pb-3">
 								<h3>Nombre: {this.state.name}</h3>
 							</li>
 							<li className="pb-3">

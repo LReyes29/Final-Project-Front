@@ -96,7 +96,7 @@ export const Temas = props => {
 							className={"fas fa-check" + (alreadyChecked() ? "-double disabled" : "")}
 							style={{ paddingLeft: "7px" }}
 							onClick={() => {
-								actions.onUpdateTopic(changingTopic, props.topic.id);
+								props.update(changingTopic, props.topic.id);
 							}}
 						/>{" "}
 						<i

@@ -2,7 +2,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			////
-			currentUserId: 3,
+			currentUserId: 1,
 			currentUserName: "Luis Reyes",
 			////
 			userMeetings: [],
@@ -123,20 +123,18 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			onCreateTopic: data => {
-				if (data.title != "") {
-					const store = getStore();
-					const newMeeting = store.currentMeeting;
-					newMeeting.topics.push(data);
-					fetch("http://localhost:5000/api/meetings/" + store.currentMeetingId, {
-						method: "PUT",
-						body: JSON.stringify(newMeeting),
-						headers: {
-							"Content-Type": "application/json"
-						}
-					})
-						.then(resp => resp.json())
-						.then(() => getActions().getFilteredMinutas("http://localhost:5000/api/meetings"));
-				} else alert("Debes ingresar un título antes de ingresar este tema");
+				const store = getStore();
+				const newMeeting = store.currentMeeting;
+				newMeeting.topics.push(data);
+				fetch("http://localhost:5000/api/meetings/" + store.currentMeetingId, {
+					method: "PUT",
+					body: JSON.stringify(newMeeting),
+					headers: {
+						"Content-Type": "application/json"
+					}
+				})
+					.then(resp => resp.json())
+					.then(() => getActions().getFilteredMinutas("http://localhost:5000/api/meetings"));
 			},
 
 			onUpdateTopic: (data, id) => {
@@ -176,9 +174,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.then(() => getActions().getFilteredMinutas("http://localhost:5000/api/meetings"));
 			},
 
-			onSendMeeting: data => {
-				console.log(data);
-				fetch("http://localhost:5000/api/sendMail", {
+			onSendInvitation: data => {
+				fetch("http://localhost:5000/api/sendInvitation", {
 					method: "POST",
 					body: JSON.stringify(data),
 					headers: {
@@ -186,7 +183,20 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 				})
 					.then(resp => resp.json())
-					.then(() => alert("Se ha enviado un correo a sus invitados con los temas de esta reunión"))
+					.then(data => console.log(data))
+					.catch(error => console.log(error));
+			},
+
+			onSendMeeting: data => {
+				fetch("http://localhost:5000/api/sendMeeting", {
+					method: "POST",
+					body: JSON.stringify(data),
+					headers: {
+						"Content-Type": "application/json"
+					}
+				})
+					.then(resp => resp.json())
+					.then(data => console.log(data))
 					.catch(error => console.log(error));
 			}
 		}

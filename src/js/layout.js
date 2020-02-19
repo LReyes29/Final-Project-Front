@@ -14,6 +14,7 @@ import { NewMeeting } from "./views/newmeeting";
 import { MyProfile } from "./views/myprofile";
 import { MemoDetails } from "./views/memodetails";
 import { Payment } from "./views/payment";
+import { Page404 } from "./views/404";
 
 //create your first component
 export const Layout = () => {
@@ -36,8 +37,8 @@ export const Layout = () => {
 							<Route exact path="/payment" component={Payment} />
 							<Route exact path="/myprofile" component={MyProfile} />
 							<Route exact path="/principal" component={Principal} />
-							<Route render={() => <h1>Not found!</h1>} />
 						</Fragment>
+						<Route component={Page404} />
 					</Switch>
 					<Footer />
 				</ScrollToTop>

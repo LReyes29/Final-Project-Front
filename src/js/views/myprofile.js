@@ -7,11 +7,7 @@ export const MyProfile = () => {
 	return (
 		<>
 			<div className="container">
-				<div className="row">
-					<div className="col-md-6">
-						<ProfileArea />
-					</div>
-				</div>
+				<ProfileArea />
 			</div>
 		</>
 	);

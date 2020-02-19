@@ -1,14 +1,14 @@
-import React, { useState, useContext, useEffect } from "react";
+import React from "react";
 import { Redirect } from "react-router-dom";
 import "../../styles/landing.css";
 import { Context } from "./../store/appContext";
-import getState from "../store/flux.js";
 
 class Login extends React.Component {
 	static contextType = Context;
 	constructor(props) {
 		super(props);
 		this.state = {
+			id: null,
 			name: "",
 			email: "",
 			password: "",
@@ -45,9 +45,13 @@ class Login extends React.Component {
 				}
 			})
 				.then(res => res.json())
-				.then(response => contexto.actions.putCurrentUser(response.id, response.fullname))
+				.then(response => {
+					contexto.actions.putCurrentUser(response.id, response.fullname), this.setState({ id: response.id });
+				})
 				.catch(error => console.error("Error:", error));
-			this.setState({ red: true });
+			if (this.state.id) {
+				this.setState({ red: true });
+			}
 		}
 	};
 
@@ -71,9 +75,13 @@ class Login extends React.Component {
 				}
 			})
 				.then(res => res.json())
-				.then(response => contexto.actions.putCurrentUser(response.id, response.fullname))
+				.then(response => {
+					contexto.actions.putCurrentUser(response.id, response.fullname), this.setState({ id: response.id });
+				})
 				.catch(error => console.error("Error:", error));
-			this.setState({ red: true });
+			if (this.state.id) {
+				this.setState({ red: true });
+			}
 		}
 	};
 
@@ -122,6 +130,7 @@ class Login extends React.Component {
 								/>
 							</div>
 							<button
+								type="submit"
 								onClick={e => this.onSubmitLogin(e)}
 								className="btn mt-4 btn-block btn-outline-dark p-2">
 								<b>Login</b>

@@ -1,8 +1,8 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			currentUserName: "Luis Reyes",
-			currentUserId: 1,
+			currentUserName: "Tu Nombre Completo",
+			currentUserId: 2,
 			currentMeetingId: null,
 			meetings: []
 		},
@@ -13,6 +13,19 @@ const getState = ({ getStore, getActions, setStore }) => {
 					currentUserId: id,
 					currentUserName: user
 				});
+			},
+
+			getCurrentUser: string => {
+				const store = getStore();
+
+				if (string === "id") {
+					let id = store.currentUserId;
+					return id;
+				}
+				if (string === "name") {
+					let name = store.currentUserName;
+					return name;
+				}
 			},
 
 			getMinutas: url => {

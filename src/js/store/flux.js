@@ -174,15 +174,28 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.then(() => getActions().getFilteredMinutas("http://localhost:5000/api/meetings"));
 			},
 
-			onSendMeeting: data => {
-				fetch("http://localhost:5000/api/sendMail", {
+			onSendInvitation: data => {
+				fetch("http://localhost:5000/api/sendInvitation", {
 					method: "POST",
 					body: JSON.stringify(data),
 					headers: {
 						"Content-Type": "application/json"
 					}
 				})
-					.then(resp => resp.json()) ///// ALERTA 4
+					.then(resp => resp.json())
+					.then(data => console.log(data))
+					.catch(error => console.log(error));
+			},
+
+			onSendMeeting: data => {
+				fetch("http://localhost:5000/api/sendMeeting", {
+					method: "POST",
+					body: JSON.stringify(data),
+					headers: {
+						"Content-Type": "application/json"
+					}
+				})
+					.then(resp => resp.json())
 					.then(data => console.log(data))
 					.catch(error => console.log(error));
 			}

@@ -8,30 +8,26 @@ export const NewMeeting = props => {
 	const { store, actions } = useContext(Context);
 	const [state, setState] = useState({
 		//LA TABLA MEETING SERÁ ASÍ AL HACERLE FETCH?
-		id: 1,
-		user_id: 1,
-		admin: "",
-		create_date: new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate(),
+		user_id: 1, //store.currentUserId,
+		create_date: "",
 		meeting_date: "",
 		meeting_hour: "",
 		project_name: "",
 		title: "",
 		topics: [
 			{
-				id: 1,
-				meeting_id: 1,
+				id: 0,
 				title: "",
 				priority: "",
 				notes: "",
 				care: "",
 				tracking: "",
-				duration: ""
+				duration: 0
 			}
 		],
 		guests: [
 			{
-				id: 1,
-				meeting_id: 1,
+				id: 0,
 				fullname: "",
 				email: "",
 				rol: ""
@@ -41,16 +37,7 @@ export const NewMeeting = props => {
 		description: "",
 		target: ""
 	});
-	// function getFetch{
-	// 	url => {
-	// 		fetch(url)
-	// 			.then(resp => resp.json())
-	// 			.then(data => setState({ data }));
-	// 	}
-	// }
-	useEffect(() => {
-		// 	getFetch("#" + props.match.params.id);
-	}, []);
+
 	function handleChange(e, name) {
 		const copy_array = Object.assign({}, state);
 		copy_array[name] = e.target.value;
@@ -61,21 +48,42 @@ export const NewMeeting = props => {
 		copy_array[name] = e.target.value;
 		setTopic(copy_array);
 	}
-	function onCreateTopic() {
-		const copy_array = Object.assign({}, state);
-		copy_array.topics.push({
-			id: "",
-			meeting_id: "",
-			title: "",
-			priority: "",
-			notes: "",
-			care: "",
-			tracking: "",
-			duration: ""
+
+	// function onCreateTopic() {
+	// 	const copy_array = Object.assign({}, state);
+	// 	copy_array.topics.push({
+	// 		id: "",
+	// 		meeting_id: "",
+	// 		title: "",
+	// 		priority: "",
+	// 		notes: "",
+	// 		care: "",
+	// 		tracking: "",
+	// 		duration: ""
+	// 	});
+	// 	setState(copy_array);
+	// 	// SE DEBE HACER UN FETCH POST Y LUEGO FETCH GET PARA QUE DEVUELVA EL NUEVO TOPIC CON UN ID ASIGNADO
+	// }
+
+	function saveAndSendData(data) {
+		actions.onCreateMeeting(data);
+
+		let newM = {};
+		newW.user = store.currentUserName;
+		newM.title = data.title;
+		//newM.description = data.description;
+		newM.meeting_date = data.meeting_date;
+		newM.meeting_hour = data.meeting_date;
+		newM.place = data.place;
+		newM.topics = data.topics;
+		newM.guest_mails = data.guests.map((item, i) => {
+			return item.email;
 		});
-		setState(copy_array);
-		// SE DEBE HACER UN FETCH POST Y LUEGO FETCH GET PARA QUE DEVUELVA EL NUEVO TOPIC CON UN ID ASIGNADO
+    
+		actions.onSendInvitation(newM);
 	}
+
+
 	function handleChangeGuest(e, name, i) {
 		const copy_array = Object.assign({}, state);
 		copy_array.guests[i][name] = e.target.value;
@@ -89,8 +97,7 @@ export const NewMeeting = props => {
 	function addGuest() {
 		const copy_array = Object.assign({}, state);
 		copy_array.guests.push({
-			id: "",
-			meeting_id: "",
+			id: 0,
 			fullname: "",
 			email: "",
 			rol: ""
@@ -100,14 +107,13 @@ export const NewMeeting = props => {
 	function addTopic() {
 		const copy_array = Object.assign({}, state);
 		copy_array.topics.push({
-			id: "",
-			meeting_id: "",
+			id: 0,
 			title: "",
 			priority: "",
 			notes: "",
 			care: "",
 			tracking: "",
-			duration: ""
+			duration: 0
 		});
 		setState(copy_array);
 	}
@@ -340,7 +346,7 @@ export const NewMeeting = props => {
 			</div>
 			<div className="container" style={{ padding: "0px" }}>
 				<div className="row" style={{ margin: "0px", marginTop: "0px" }}>
-					<label htmlFor="inputParticipante" className="col-sm-4 col-form-label">
+					<label htmlFor="inputParticipante" className="col-sm-8 col-form-label">
 						<h4 className="justify-content-center align-content-center">Temas</h4>
 					</label>
 					<label htmlFor="inputParticipante" className="col-sm-4 col-form-label">
@@ -352,7 +358,7 @@ export const NewMeeting = props => {
 						<div className="row" style={{ margin: "0px", marginTop: "0px" }} key={i}>
 							<form style={{ width: "100%" }}>
 								<div className="form-group row" style={{ marginTop: "0px" }}>
-									<div className="col-md-4">
+									<div className="col-md-8">
 										<input
 											type="text"
 											onChange={e => handleChangeTopic(e, "title", i)}
@@ -361,9 +367,9 @@ export const NewMeeting = props => {
 											placeholder="Describa el tema"
 										/>
 									</div>
-									<div className="col-md-4">
+									<div className="col-md-1">
 										<input
-											type="time"
+											type="text"
 											onChange={e => handleChangeTopic(e, "duration", i)}
 											name="usr_time"
 											className="form-control"
@@ -391,10 +397,10 @@ export const NewMeeting = props => {
 						<Link className="" to="/principal">
 							<button
 								className="btn btn-primary mt-3"
-								type="button"
-								onClick={() => actions.onCreate(state)}
+								type="button"		
+								onClick={() => saveAndSendData(state)}
 								style={{ marginLeft: "10px" }}>
-								Guardar
+								Guardar y Enviar Invitaciones
 							</button>
 						</Link>
 					</div>

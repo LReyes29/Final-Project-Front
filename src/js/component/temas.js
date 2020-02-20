@@ -57,7 +57,6 @@ export const Temas = props => {
 							value={changingTopic.title}
 							onChange={e => handleChangeInput(e)}
 						/>
-						<p>{changingTopic.title}</p>
 					</div>
 					<div className="col-md-1 d-flex align-item-center d-flex justify-content-center px-0">
 						<select name="priority" value={changingTopic.priority} onChange={e => handleChangeInput(e)}>
@@ -97,7 +96,7 @@ export const Temas = props => {
 							className={"fas fa-check" + (alreadyChecked() ? "-double disabled" : "")}
 							style={{ paddingLeft: "7px" }}
 							onClick={() => {
-								actions.onUpdateTopic(changingTopic, props.topic.id);
+								props.update(changingTopic, props.topic.id);
 							}}
 						/>{" "}
 						<i

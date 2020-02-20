@@ -6,7 +6,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			currentMeetingId: null,
 			meetings: []
 		},
-
 		actions: {
 			putCurrentUser: (id, user) => {
 				setStore({
@@ -29,85 +28,28 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			getMinutas: url => {
-				fetch(url, {
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json"
-					}
-				})
+				fetch(url)
 					.then(resp => resp.json())
-					.then(data => setStore({ UserMeetings: data }));
+					.then(data => setStore({ data: data }));
 			},
 
-			getFilteredMinutas: url => {
+			onCreate: (url, data) => {
+				console.log(data);
 				fetch(url, {
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json"
-					}
-				})
-					.then(resp => resp.json())
-					.then(data => {
-						const store = getStore();
-						let filteredMeetings = data.filter(item => {
-							return item.user_id == store.currentUserId;
-						});
-						setStore({
-							userMeetings: filteredMeetings
-						});
-					});
-			},
-
-			saveMeetingId: id => {
-				setStore({ currentMeetingId: id });
-			},
-
-			getCurrentMeeting: () => {
-				const store = getStore();
-				let cMeeting = store.userMeetings.filter(item => {
-					return item.id == store.currentMeetingId;
-				});
-				setStore({
-					currentMeeting: cMeeting[0]
-				});
-			},
-
-			handleChangeMeeting: e => {
-				const store = getStore();
-				const cM = store.currentMeeting;
-				cM[e.target.name] = e.target.value;
-				setStore({ currentMeeting: cM });
-			},
-
-			saveTopicId: id => {
-				setStore({ currentTopicId: id });
-			},
-
-			getCurrentTopic: () => {
-				const store = getStore();
-				let cTopic = store.currentMeeting.topics.filter(item => {
-					return item.id == store.currentTopicId;
-				});
-				setStore({
-					currentTopic: cTopic
-				});
-			},
-
-			onCreateMeeting: data => {
-				// LA VA A OCUPAR ANDRES DUMAS PARA CREAR LAS REUNIONES EN LA API
-				fetch("http://localhost:5000/api/meetings/", {
 					method: "POST",
 					body: JSON.stringify(data),
 					headers: {
 						"Content-Type": "application/json"
 					}
+					// mode: "no-cors"
 				})
 					.then(resp => resp.json())
-					.then(() => getActions().getFilteredMinutas("http://localhost:5000/api/meetings"));
+					.then(() => getActions().getFilteredMinutas("http://localhost:5000/api/meetings"))
+					.catch(error=>console.log(error));
 			},
 
-			onUpdateMeeting: (data, id) => {
-				fetch("http://localhost:5000/api/meetings/" + id, {
+			onUpdate: (data, id) => {
+				fetch("#" + id, {
 					method: "PUT",
 					body: JSON.stringify(data),
 					headers: {
@@ -115,34 +57,22 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 				})
 					.then(resp => resp.json())
-					.then(() => getActions().getFilteredMinutas("http://localhost:5000/api/meetings"));
+					.then(() => getActions().getMinutas("#"));
 			},
-			onDeleteMeeting: id => {
-				fetch("http://localhost:5000/api/meetings/" + id, {
-					method: "DELETE",
+
+			onCreateTopic: data => {
+				const store = getStore();
+				const newMeeting = store.currentMeeting;
+				newMeeting.topics.push(data);
+				fetch("http://localhost:5000/api/meetings/" + store.currentMeetingId, {
+					method: "PUT",
+					body: JSON.stringify(newMeeting),
 					headers: {
 						"Content-Type": "application/json"
 					}
 				})
 					.then(resp => resp.json())
 					.then(() => getActions().getFilteredMinutas("http://localhost:5000/api/meetings"));
-			},
-
-			onCreateTopic: data => {
-				if (data.title != "") {
-					const store = getStore();
-					const newMeeting = store.currentMeeting;
-					newMeeting.topics.push(data);
-					fetch("http://localhost:5000/api/meetings/" + store.currentMeetingId, {
-						method: "PUT",
-						body: JSON.stringify(newMeeting),
-						headers: {
-							"Content-Type": "application/json"
-						}
-					})
-						.then(resp => resp.json())
-						.then(() => getActions().getFilteredMinutas("http://localhost:5000/api/meetings"));
-				} else alert("Debes ingresar un título antes de ingresar este tema");
 			},
 
 			onUpdateTopic: (data, id) => {
@@ -180,10 +110,33 @@ const getState = ({ getStore, getActions, setStore }) => {
 				})
 					.then(resp => resp.json())
 					.then(() => getActions().getFilteredMinutas("http://localhost:5000/api/meetings"));
-			}
+			},
 
-			// onSendMeeting: id => {
-			// }
+			onSendInvitation: data => {
+				fetch("http://localhost:5000/api/sendInvitation", {
+					method: "POST",
+					body: JSON.stringify(data),
+					headers: {
+						"Content-Type": "application/json"
+					}
+				})
+					.then(resp => resp.json())
+					.then(data => console.log(data))
+					.catch(error => console.log(error));
+			},
+
+			onSendMeeting: data => {
+				fetch("http://localhost:5000/api/sendMeeting", {
+					method: "POST",
+					body: JSON.stringify(data),
+					headers: {
+						"Content-Type": "application/json"
+					}
+				})
+					.then(resp => resp.json())
+					.then(data => console.log(data))
+					.catch(error => console.log(error));
+			}
 		}
 	};
 };

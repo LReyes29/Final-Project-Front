@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import "../../styles/landing.css";
 import { Context } from "./../store/appContext";
 import Login from "../component/login.js";
-import favicon from "../../img/favicon.png";
+import favicon from "../../img/Logo_banner.png";
 import getState from "../store/flux.js";
 
 export const Home = () => {
@@ -12,10 +12,9 @@ export const Home = () => {
 				<div className="container">
 					<div className="row">
 						<div className="p-5 col-md-7 d-flex flex-column justify-content-center">
-							<h3 className="display-4 mb-3">
-								<img src={favicon} height="75" />
-								ORKASTA
-							</h3>
+							<h1 className="display-4 mb-3">
+								<img src={favicon} height="80" />
+							</h1>
 							<p className="mb-4 lead">
 								{" "}
 								Seem to do well in my soul and absorb its power, like the form of a beloved mistress,
@@ -23,11 +22,7 @@ export const Home = () => {
 							</p>
 						</div>
 						<div className="p-5 col-md-5 shadow-lg">
-							<div className="container">
-								<div className="row">
-									<Login />
-								</div>
-							</div>
+							<Login />
 						</div>
 					</div>
 				</div>

@@ -79,10 +79,9 @@ export const NewMeeting = props => {
 		newM.guest_mails = data.guests.map((item, i) => {
 			return item.email;
 		});
-    
+
 		actions.onSendInvitation(newM);
 	}
-
 
 	function handleChangeGuest(e, name, i) {
 		const copy_array = Object.assign({}, state);
@@ -397,7 +396,7 @@ export const NewMeeting = props => {
 						<Link className="" to="/principal">
 							<button
 								className="btn btn-primary mt-3"
-								type="button"		
+								type="button"
 								onClick={() => saveAndSendData(state)}
 								style={{ marginLeft: "10px" }}>
 								Guardar y Enviar Invitaciones

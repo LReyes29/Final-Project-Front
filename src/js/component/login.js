@@ -46,12 +46,13 @@ class Login extends React.Component {
 			})
 				.then(res => res.json())
 				.then(response => {
-					contexto.actions.putCurrentUser(response.id, response.fullname), this.setState({ id: response.id });
+					contexto.actions.putCurrentUser(response.id, response.fullname);
+					this.setState({ id: response.id });
+					if (this.state.id) {
+						this.setState({ red: true });
+					}
 				})
 				.catch(error => console.error("Error:", error));
-			if (this.state.id) {
-				this.setState({ red: true });
-			}
 		}
 	};
 
@@ -76,12 +77,13 @@ class Login extends React.Component {
 			})
 				.then(res => res.json())
 				.then(response => {
-					contexto.actions.putCurrentUser(response.id, response.fullname), this.setState({ id: response.id });
+					contexto.actions.putCurrentUser(response.id, response.fullname);
+					this.setState({ id: response.id });
+					if (this.state.id != null) {
+						this.setState({ red: true });
+					}
 				})
 				.catch(error => console.error("Error:", error));
-			if (this.state.id) {
-				this.setState({ red: true });
-			}
 		}
 	};
 

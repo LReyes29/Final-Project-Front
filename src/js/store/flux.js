@@ -45,11 +45,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					});
 			},
 
-
-			onCreate: (url, data) => {
-				console.log(data);
-				fetch(url, {
-
 			saveMeetingId: id => {
 				setStore({ currentMeetingId: id });
 			},
@@ -86,17 +81,17 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			onCreateMeeting: data => {
-				fetch("http://localhost:5000/api/meetings/", {
+				fetch("http://localhost:5000/api/meetings", {
 					method: "POST",
 					body: JSON.stringify(data),
 					headers: {
 						"Content-Type": "application/json"
 					}
-					// mode: "no-cors"
+					//mode: "no-cors"
 				})
 					.then(resp => resp.json())
 					.then(() => getActions().getFilteredMinutas("http://localhost:5000/api/meetings"))
-					.catch(error=>console.log(error));
+					.catch(error => console.log(error));
 			},
 
 			onUpdateMeeting: (data, id) => {
@@ -113,7 +108,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			onDeleteMeeting: id => {
 				const store = getStore();
-				const dM = store.userMeetings;
+				let dM = store.userMeetings;
 				const restOfThem = store.userMeetings.filter(item => {
 					return item.id !== id;
 				});

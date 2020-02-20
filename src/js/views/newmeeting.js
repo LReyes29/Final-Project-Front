@@ -7,9 +7,8 @@ import { Context } from "../store/appContext";
 export const NewMeeting = props => {
 	const { store, actions } = useContext(Context);
 	const [state, setState] = useState({
-		//LA TABLA MEETING SERÁ ASÍ AL HACERLE FETCH?
-		user_id: 1, //store.currentUserId,
-		create_date: "",
+		user_id: store.currentUserId,
+		//create_date: "",
 		meeting_date: "",
 		meeting_hour: "",
 		project_name: "",
@@ -43,42 +42,28 @@ export const NewMeeting = props => {
 		copy_array[name] = e.target.value;
 		setState(copy_array);
 	}
+
 	function handleChangeTopic(e, name) {
 		const copy_array = Object.assign({}, topic);
 		copy_array[name] = e.target.value;
 		setTopic(copy_array);
 	}
 
-	// function onCreateTopic() {
-	// 	const copy_array = Object.assign({}, state);
-	// 	copy_array.topics.push({
-	// 		id: "",
-	// 		meeting_id: "",
-	// 		title: "",
-	// 		priority: "",
-	// 		notes: "",
-	// 		care: "",
-	// 		tracking: "",
-	// 		duration: ""
-	// 	});
-	// 	setState(copy_array);
-	// 	// SE DEBE HACER UN FETCH POST Y LUEGO FETCH GET PARA QUE DEVUELVA EL NUEVO TOPIC CON UN ID ASIGNADO
-	// }
-
 	function saveAndSendData(data) {
 		actions.onCreateMeeting(data);
 
 		let newM = {};
-		newW.user = store.currentUserName;
+		newM.user = store.currentUserName;
 		newM.title = data.title;
 		//newM.description = data.description;
 		newM.meeting_date = data.meeting_date;
-		newM.meeting_hour = data.meeting_date;
+		newM.meeting_hour = data.meeting_hour;
 		newM.place = data.place;
 		newM.topics = data.topics;
 		newM.guest_mails = data.guests.map((item, i) => {
 			return item.email;
 		});
+		console.log(newM);
 
 		actions.onSendInvitation(newM);
 	}
@@ -88,11 +73,13 @@ export const NewMeeting = props => {
 		copy_array.guests[i][name] = e.target.value;
 		setState(copy_array);
 	}
+
 	function handleChangeTopic(e, name, i) {
 		const copy_array = Object.assign({}, state);
 		copy_array.topics[i][name] = e.target.value;
 		setState(copy_array);
 	}
+
 	function addGuest() {
 		const copy_array = Object.assign({}, state);
 		copy_array.guests.push({
@@ -103,6 +90,7 @@ export const NewMeeting = props => {
 		});
 		setState(copy_array);
 	}
+
 	function addTopic() {
 		const copy_array = Object.assign({}, state);
 		copy_array.topics.push({
@@ -116,16 +104,19 @@ export const NewMeeting = props => {
 		});
 		setState(copy_array);
 	}
+
 	function deleteGuest(i) {
 		const copy_array = Object.assign({}, state);
 		copy_array.guests.splice(i, 1);
 		setState(copy_array);
 	}
+
 	function deleteTopic(i) {
 		const copy_array = Object.assign({}, state);
 		copy_array.topics.splice(i, 1);
 		setState(copy_array);
 	}
+
 	const sumaGuest = (
 		<button
 			type="button"
@@ -136,6 +127,7 @@ export const NewMeeting = props => {
 			<i className="fa fa-plus" />
 		</button>
 	);
+
 	const restaGuest = i => {
 		return (
 			<button
@@ -148,6 +140,7 @@ export const NewMeeting = props => {
 			</button>
 		);
 	};
+
 	const sumaTopic = (
 		<button
 			type="button"
@@ -158,6 +151,7 @@ export const NewMeeting = props => {
 			<i className="fa fa-plus" />
 		</button>
 	);
+
 	const restaTopic = i => {
 		return (
 			<button
@@ -170,6 +164,7 @@ export const NewMeeting = props => {
 			</button>
 		);
 	};
+
 	return (
 		<div>
 			<div className="container" style={{ padding: "0px" }}>
@@ -232,7 +227,7 @@ export const NewMeeting = props => {
 										value={state.meeting_hour}
 									/>
 									<small id="hora" className="form-text text-muted">
-										Hora en formato 24hrs
+										Formato 24 hrs.
 									</small>
 								</div>
 							</div>
@@ -375,7 +370,7 @@ export const NewMeeting = props => {
 											value={item.duration}
 										/>
 										<small id="hora" className="form-text text-muted">
-											Tiempo en minutos
+											En minutos
 										</small>
 									</div>
 									<div className="col-md-1">

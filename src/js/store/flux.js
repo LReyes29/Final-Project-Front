@@ -13,8 +13,27 @@ const getState = ({ getStore, getActions, setStore }) => {
 			//currentTopicId: "",
 			//currentTopic: {}
 		},
-
 		actions: {
+			putCurrentUser: (id, user) => {
+				setStore({
+					currentUserId: id,
+					currentUserName: user
+				});
+			},
+
+			getCurrentUser: string => {
+				const store = getStore();
+
+				if (string === "id") {
+					let id = store.currentUserId;
+					return id;
+				}
+				if (string === "name") {
+					let name = store.currentUserName;
+					return name;
+				}
+			},
+
 			getMinutas: url => {
 				fetch(url, {
 					method: "GET",

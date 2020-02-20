@@ -1,52 +1,23 @@
 import React, { Component } from "react";
 
 export const Footer = () => (
-	<footer className="footer mt-auto py-3 text-center">
+	<footer className="footer mt-auto text-center">
 		<footer style={{ backgroundColor: "#192a56", paddingTop: "15px", paddingBottom: "15px", marginTop: "30px" }}>
-			<div className="container">
-				<div className="row d-xl-flex justify-content-xl-end">
-					<div className="col item" style={{ color: "#eeeeee" }}>
-						<h5>Servicios</h5>
-						<ul className="list-unstyled" style={{ color: "#eeeeee" }}>
-							<li style={{ color: "#eeeeee", opacity: "1" }}>
-								<a href="#">Desarrollo Web</a>
-							</li>
-							<li>
-								<a href="#">Diseño</a>
-							</li>
-							<li>
-								<a href="#">Consultorias</a>
-							</li>
-						</ul>
-					</div>
-					<div className="col-sm-4 col-md-3 item" style={{ color: "#eeeeee" }}>
-						<h5>Sobre Nosotros</h5>
-						<ul className="list-unstyled">
-							<li>
-								<a href="#">Empresa</a>
-							</li>
-							<li>
-								<a href="#">Equipo</a>
-							</li>
-							<li>
-								<a href="#">Vision</a>
-							</li>
-						</ul>
-					</div>
-					<div className="col-lg-3 d-xl-flex justify-content-xl-end item social" style={{ color: "#eeeeee" }}>
-						<a href="#">
-							<i className="icon ion-social-facebook" style={{ padding: "10px" }} />
-						</a>
-						<a href="#">
-							<i className="icon ion-social-instagram" />
-						</a>
+			<div className="py-3 bg-dark text-info">
+				<div className="container">
+					<div className="row">
+						<div className="col-md-12 text-center">
+							<p className="mb-0">© 2020 ORKASTA. All rights reserved</p>
+						</div>
 					</div>
 				</div>
 			</div>
 		</footer>
 		<p>
 			Made with <i className="fa fa-heart text-danger" /> by students in{" "}
-			<a href="http://www.4geeksacademy.com">4Geeks Academy</a>
+			<a style={{ color: "black" }} href="http://www.4geeksacademy.com">
+				4Geeks Academy
+			</a>
 		</p>
 	</footer>
 );

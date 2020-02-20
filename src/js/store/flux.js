@@ -1,81 +1,31 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			minutas: [
-				{
-					id: "1",
-					date: "04-02-2020",
-					title: "test1",
-					description: "test1_description",
-					duration: "1",
-					topics_num: "1"
-				},
-				{
-					id: "2",
-					date: "05-02-2020",
-					title: "test2",
-					description: "test2_description",
-					duration: "2",
-					topics_num: "2"
-				},
-				{
-					id: "3",
-					date: "06-02-2020",
-					title: "test3",
-					description: "test3_description",
-					duration: "3",
-					topics_num: "3"
-				},
-				{
-					id: "4",
-					date: "07-02-2020",
-					title: "test4",
-					description: "test4_description",
-					duration: "4",
-					topics_num: "4"
-				},
-				{
-					id: "5",
-					date: "08-02-2020",
-					title: "test3",
-					description: "test3_description",
-					duration: "3",
-					topics_num: "3"
-				},
-				{
-					id: "6",
-					date: "09-02-2020",
-					title: "test4",
-					description: "test4_description",
-					duration: "4",
-					topics_num: "4"
-				}
-			]
+			currentUserName: "Tu Nombre Completo",
+			currentUserId: 2,
+			currentMeetingId: null,
+			meetings: []
 		},
 		actions: {
-			// // Use getActions to call a function within a fuction
-			// exampleFunction: () => {
-			// 	getActions().changeColor(0, "green");
-			// },
-			// loadSomeData: () => {
-			// 	/**
-			// 		fetch().then().then(data => setStore({ "foo": data.bar }))
-			// 	*/
-			// },
-			// changeColor: (index, color) => {
-			// 	//get the store
-			// 	const store = getStore();
+			putCurrentUser: (id, user) => {
+				setStore({
+					currentUserId: id,
+					currentUserName: user
+				});
+			},
 
-			// 	//we have to loop the entire demo array to look for the respective index
-			// 	//and change its color
-			// 	const demo = store.demo.map((elm, i) => {
-			// 		if (i === index) elm.background = color;
-			// 		return elm;
-			// 	});
+			getCurrentUser: string => {
+				const store = getStore();
 
-			// 	//reset the global store
-			// 	setStore({ demo: demo });
-			// },
+				if (string === "id") {
+					let id = store.currentUserId;
+					return id;
+				}
+				if (string === "name") {
+					let name = store.currentUserName;
+					return name;
+				}
+			},
 
 			getMinutas: url => {
 				fetch(url)

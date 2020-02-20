@@ -1,20 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import { Redirect } from "react-router-dom";
 import "../../styles/landing.css";
-import getState from "../store/flux.js";
+import { Context } from "./../store/appContext";
 
 class Login extends React.Component {
+	static contextType = Context;
 	constructor(props) {
 		super(props);
-		this.state = getState({
-			getStore: () => state.store,
-			getActions: () => state.actions,
-			setStore: updatedStore =>
-				setState({
-					store: Object.assign(state.store, updatedStore),
-					actions: { ...state.actions }
-				})
-		});
+		this.state = {
+			id: null,
+			name: "",
+			email: "",
+			password: "",
+			repeated_pass: "123",
+			red: false
+		};
 	}
 
 	handleChange = e => {
@@ -26,51 +26,62 @@ class Login extends React.Component {
 
 	onSubmitRegister = e => {
 		e.preventDefault();
+		const contexto = this.context;
+
+		var url = "http://127.0.0.1:5000//api/users";
+
 		let form = {
-			name: this.state.name,
+			fullname: this.state.name,
 			email: this.state.email,
-			password: this.state.password,
-			repeated_pass: this.state.repeated_pass
+			password: this.state.password
 		};
 
-		{
-			/* Aqui se manda a la api*/
-		}
-		// database.push(form);
-		this.setState({
-			name: "",
-			email: "",
-			password: " ",
-			repeated_pass: " "
-		});
-
 		if (this.state.password === this.state.repeated_pass) {
-			this.setState({
-				red: true
-			});
+			fetch(url, {
+				method: "POST", // or 'PUT'
+				body: JSON.stringify(form), // data can be `string` or {object}!
+				headers: {
+					"Content-Type": "application/json"
+				}
+			})
+				.then(res => res.json())
+				.then(response => {
+					contexto.actions.putCurrentUser(response.id, response.fullname), this.setState({ id: response.id });
+				})
+				.catch(error => console.error("Error:", error));
+			if (this.state.id) {
+				this.setState({ red: true });
+			}
 		}
 	};
 
 	onSubmitLogin = e => {
 		e.preventDefault();
+		const contexto = this.context;
+
+		var url = "http://127.0.0.1:5000/user/login";
+
 		let form = {
 			email: this.state.email,
 			password: this.state.password
 		};
 
-		{
-			/* Aqui se manda a la api*/
-		}
-
-		//database.push(form);
-		this.setState({
-			email: " ",
-			password: " "
-		});
-		if (this.state.password) {
-			this.setState({
-				red: true
-			});
+		if (form.email != null && form.password != null) {
+			fetch(url, {
+				method: "POST", // or 'PUT'
+				body: JSON.stringify(form), // data can be `string` or {object}!
+				headers: {
+					"Content-Type": "application/json"
+				}
+			})
+				.then(res => res.json())
+				.then(response => {
+					contexto.actions.putCurrentUser(response.id, response.fullname), this.setState({ id: response.id });
+				})
+				.catch(error => console.error("Error:", error));
+			if (this.state.id) {
+				this.setState({ red: true });
+			}
 		}
 	};
 
@@ -119,6 +130,7 @@ class Login extends React.Component {
 								/>
 							</div>
 							<button
+								type="submit"
 								onClick={e => this.onSubmitLogin(e)}
 								className="btn mt-4 btn-block btn-outline-dark p-2">
 								<b>Login</b>

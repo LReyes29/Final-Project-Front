@@ -14,14 +14,12 @@ export const Principal = () => {
 
 	const getLastMeeting = () => {
 		let UMeetings = [];
-		if (store.userMeetings) {
-			UMeetings = store.userMeetings;
-			UMeetings.sort(function(a, b) {
-				let dateA = new Date(a.create_date),
-					dateB = new Date(b.create_date);
-				return dateA - dateB;
-			});
-		}
+		UMeetings = store.userMeetings;
+		UMeetings.sort(function(a, b) {
+			let dateA = new Date(a.create_date),
+				dateB = new Date(b.create_date);
+			return dateA - dateB;
+		});
 		actions.saveMeetingId(UMeetings[UMeetings.length - 1].id);
 	};
 
@@ -48,11 +46,15 @@ export const Principal = () => {
 					</div>
 					<div className="col-4" />
 					<div className="col-4 d-flex justify-content-end">
-						<Link className="btn p-0 border-0" to={"/memodetails/" + store.currentMeetingId}>
-							<button type="button" className="btn btn-outline-dark" onClick={() => getLastMeeting()}>
-								Abrir última minuta creada
-							</button>
-						</Link>
+						{store.userMeetings.length > 0 ? (
+							<Link className="btn p-0 border-0" to={"/memodetails/" + store.currentMeetingId}>
+								<button type="button" className="btn btn-outline-dark" onClick={() => getLastMeeting()}>
+									Abrir última minuta creada
+								</button>
+							</Link>
+						) : (
+							""
+						)}
 					</div>
 				</div>
 			</div>

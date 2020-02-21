@@ -105,7 +105,7 @@ class ProfileArea extends React.Component {
 						</ul>
 					</div>
 					<div className="col-md-4">
-						<form id="rendered-form">
+						<form autoComplete="off" id="rendered-form">
 							<div className="rendered-form">
 								<div className="">
 									<h1 access="false" id="control-5042391">

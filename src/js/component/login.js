@@ -1,5 +1,6 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
+import { Alert } from "reactstrap";
 import "../../styles/landing.css";
 import { Context } from "./../store/appContext";
 
@@ -13,7 +14,10 @@ class Login extends React.Component {
 			email: "",
 			password: "",
 			repeated_pass: "123",
-			red: false
+			red: false,
+			visibleAlerta: false,
+			estadoAlerta: "",
+			alertMessage: ""
 		};
 	}
 
@@ -33,27 +37,33 @@ class Login extends React.Component {
 		let form = {
 			fullname: this.state.name,
 			email: this.state.email,
-			password: this.state.password
+			password: this.state.password,
+			repeated_pass: this.state.repeated_pass
 		};
 
-		if (this.state.password === this.state.repeated_pass) {
-			fetch(url, {
-				method: "POST", // or 'PUT'
-				body: JSON.stringify(form), // data can be `string` or {object}!
-				headers: {
-					"Content-Type": "application/json"
-				}
-			})
-				.then(res => res.json())
-				.then(response => {
+		fetch(url, {
+			method: "POST", // or 'PUT'
+			body: JSON.stringify(form), // data can be `string` or {object}!
+			headers: {
+				"Content-Type": "application/json"
+			}
+		})
+			.then(res => res.json())
+			.then(response => {
+				if (response.status == "Succes") {
 					contexto.actions.putCurrentUser(response.id, response.fullname);
 					this.setState({ id: response.id });
-					if (this.state.id) {
-						this.setState({ red: true });
-					}
-				})
-				.catch(error => console.error("Error:", error));
-		}
+					this.setState({ red: true });
+				}
+				if (response.status == "Alerta") {
+					this.setState({
+						alertMessage: response.msg,
+						estadoAlerta: response.status
+					});
+					this.AlertToggle();
+				}
+			})
+			.catch(error => console.error("Error:", error));
 	};
 
 	onSubmitLogin = e => {
@@ -77,20 +87,38 @@ class Login extends React.Component {
 			})
 				.then(res => res.json())
 				.then(response => {
-					contexto.actions.putCurrentUser(response.id, response.fullname);
-					this.setState({ id: response.id });
-					if (this.state.id != null) {
+					if (response.status == "Succes") {
+						contexto.actions.putCurrentUser(response.id, response.fullname);
+						this.setState({ id: response.id });
 						this.setState({ red: true });
+					}
+					if (response.status == "Alerta") {
+						this.setState({
+							alertMessage: response.msg,
+							estadoAlerta: response.status
+						});
+						this.setState({ estadoAlerta: true });
+						this.AlertToggle();
 					}
 				})
 				.catch(error => console.error("Error:", error));
 		}
 	};
 
+	AlertToggle() {
+		this.setState({
+			visibleAlerta: !this.state.visibleAlerta
+		});
+	}
+
 	render() {
 		if (this.state.red) {
 			return <Redirect to="/principal" />;
 		}
+		const alerta = {
+			status: "Alerta",
+			mensaje: "prueba"
+		};
 		return (
 			<div className="col-md-12">
 				<ul className="nav nav-tabs pl-5 border-0">
@@ -128,9 +156,18 @@ class Login extends React.Component {
 									className="form-control"
 									placeholder="Password"
 									required="required"
-									onChange={e => this.handleChange(e)}
+									onChange={e => {
+										this.handleChange(e);
+									}}
 								/>
 							</div>
+							<Alert
+								color="danger"
+								isOpen={this.state.visibleAlerta}
+								role="alert"
+								toggle={this.AlertToggle.bind(this)}>
+								{this.state.alertMessage}
+							</Alert>
 							<button
 								type="submit"
 								onClick={e => this.onSubmitLogin(e)}
@@ -186,6 +223,13 @@ class Login extends React.Component {
 									onChange={e => this.handleChange(e)}
 								/>
 							</div>
+							<Alert
+								color="danger"
+								isOpen={this.state.visibleAlerta}
+								role="alert"
+								toggle={this.AlertToggle.bind(this)}>
+								{this.state.alertMessage}
+							</Alert>
 							<button
 								type="submit"
 								onClick={e => this.onSubmitRegister(e)}

@@ -1,11 +1,11 @@
-import React, { useContext, useEffect } from "react";
+import React from "react";
+import Pago from "../component/pago";
 import "../../styles/home.scss";
-import { Context } from "./../store/appContext";
 
 export const Payment = () => {
 	return (
-		<div>
-			<h1>Hola, Soy Payment</h1>
+		<div className="container-fluid pt-5 pb-5">
+			<Pago />
 		</div>
 	);
 };

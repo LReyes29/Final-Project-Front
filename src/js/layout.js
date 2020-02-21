@@ -1,10 +1,10 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 
 import injectContext from "./store/appContext";
 
-import { Navbar } from "./component/navbar";
+import Navbar from "./component/navbar";
 import { Footer } from "./component/footer";
 
 //Views
@@ -14,6 +14,7 @@ import { NewMeeting } from "./views/newmeeting";
 import { MyProfile } from "./views/myprofile";
 import { MemoDetails } from "./views/memodetails";
 import { Payment } from "./views/payment";
+import { Page404 } from "./views/404";
 
 //create your first component
 export const Layout = () => {
@@ -25,17 +26,19 @@ export const Layout = () => {
 		<div className="d-flex flex-column h-100">
 			<BrowserRouter>
 				<ScrollToTop>
-					<Navbar />
 					<Switch>
-						<Route exact path="/newmeeting/:id" component={NewMeeting} />
-						<Route exact path="/newmeeting" component={NewMeeting} />
-						<Route exact path="/memodetails/:id" component={MemoDetails} />
-						<Route exact path="/memodetails" component={MemoDetails} />
-						<Route exact path="/payment" component={Payment} />
-						<Route exact path="/myprofile" component={MyProfile} />
-						<Route exact path="/principal" component={Principal} />
 						<Route exact path="/" component={Home} />
-						<Route render={() => <h1>Not found!</h1>} />
+						<Fragment>
+							<Navbar />
+							<Route exact path="/newmeeting/:id" component={NewMeeting} />
+							<Route exact path="/newmeeting" component={NewMeeting} />
+							<Route exact path="/memodetails/:id" component={MemoDetails} />
+							<Route exact path="/memodetails" component={MemoDetails} />
+							<Route exact path="/payment" component={Payment} />
+							<Route exact path="/myprofile" component={MyProfile} />
+							<Route exact path="/principal" component={Principal} />
+						</Fragment>
+						<Route component={Page404} />
 					</Switch>
 					<Footer />
 				</ScrollToTop>

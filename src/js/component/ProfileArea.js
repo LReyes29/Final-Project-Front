@@ -12,8 +12,7 @@ class ProfileArea extends React.Component {
 			name: null,
 			email: null,
 			password: null,
-			repeated_pass: "123",
-			red: false
+			repeated_pass: "123"
 		};
 	}
 
@@ -82,17 +81,11 @@ class ProfileArea extends React.Component {
 	};
 
 	render() {
-		// if (this.state.red) {
-		// 	return <Redirect to="/principal" />;
-		// }
 		return (
 			<>
-				<div className="row content-center pt-3">
-					<h1 className="text-center">Hola {this.state.name}</h1>
-				</div>
 				<div className="row">
 					<div className="col-md-8">
-						<ul className="p-3">
+						<ul className="p-3 pt-5">
 							<li className="pb-3">
 								<h3>Nombre: {this.state.name}</h3>
 							</li>

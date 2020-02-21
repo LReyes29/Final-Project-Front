@@ -17,7 +17,7 @@ class ProfileArea extends React.Component {
 		};
 	}
 
-	componentDidMount() {
+	UNSAFE_componentWillMount() {
 		this.getUSerInfo();
 	}
 

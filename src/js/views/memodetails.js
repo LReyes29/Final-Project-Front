@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
-
 import ReactDOM from "react-dom";
+
 import Countdown, { zeroPad } from "react-countdown-now";
 
 import PropTypes from "prop-types";
@@ -32,14 +32,10 @@ export const MemoDetails = props => {
 		topicNoTitleNoPriority: false
 	});
 
-	useEffect(
-		() => {
-			actions.getCurrentMeeting();
-		},
-		[store.userMeetings]
-	);
-
 	useEffect(() => {
+		if (store.currentUserId === "") props.history.push("/");
+		else actions.getCurrentMeeting();
+
 		let sum_time = 0;
 		if (store.currentMeeting.topics != null) {
 			store.currentMeeting.topics.forEach(item => {
@@ -211,7 +207,7 @@ export const MemoDetails = props => {
 									id="meeting_counter"
 									date={time}
 									ref={ref => setClockRef(ref)}
-									autoStart={false}
+									autoStart
 									daysInHours
 									onPause={() => setAlert({ meetingOnPause: true })}
 									onComplete={() => setAlert({ meetingOnComplete: true })}
@@ -219,13 +215,13 @@ export const MemoDetails = props => {
 							</h1>
 						</div>
 						<div className="d-block d-flex justify-content-lg-center">
-							<button
+							{/* <button
 								className={"btn btn-success " + (alert.meetingOnPause == true ? "disabled" : "")}
 								type="button"
 								onClick={() => start()}
 								style={{ margin: "5px" }}>
 								Iniciar
-							</button>
+							</button> */}
 							<button
 								className={"btn btn-danger " + (alert.meetingOnPause == true ? "disabled" : "")}
 								type="button"
@@ -237,7 +233,18 @@ export const MemoDetails = props => {
 					</div>
 				</div>
 			</div>
-
+			<div>
+				{alert.meetingOnPause == true ? (
+					<Alert
+						type="warning"
+						strong="Atención"
+						message="La reunión se encuentra detenida"
+						returnState={returnBaseState}
+					/>
+				) : (
+					""
+				)}
+			</div>
 			<div className="container" style={{ padding: "5px" }}>
 				<div className="row" style={{ margin: "0px", marginTop: "10px" }}>
 					<div className="col-12" style={{ paddingRight: "5px", paddingLeft: "5px" }}>
@@ -278,16 +285,6 @@ export const MemoDetails = props => {
 			</div>
 
 			<div>
-				{alert.meetingOnPause == true ? (
-					<Alert
-						type="warning"
-						strong="Atención"
-						message="La reunión se encuentra detenida"
-						returnState={returnBaseState}
-					/>
-				) : (
-					""
-				)}
 				{alert.meetingOnComplete == true ? (
 					<Alert
 						type="danger"

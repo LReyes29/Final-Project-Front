@@ -14,6 +14,7 @@ export const Minutas = props => {
 			return item.id == id;
 		});
 		let data = {};
+		data.user = store.currentUserName;
 		data.title = currentMeet[0].title;
 		data.meeting_date = currentMeet[0].meeting_date;
 		data.topics = currentMeet[0].topics;
@@ -51,10 +52,16 @@ export const Minutas = props => {
 						<Link className="btn btn-outline-info p-0 border-0" to={"/memodetails/" + props.meeting.id}>
 							<button
 								type="button"
-								title="Comenzar Reunión"
+								title="Reunión"
 								className="btn"
 								onClick={() => actions.saveMeetingId(props.meeting.id)}>
-								<i className="fas fa-users" style={{ fontSize: "20px" }} />
+								<i
+									className="fas fa-users"
+									style={{
+										fontSize: "20px",
+										color: props.meeting.done == "false" ? "green" : "red"
+									}}
+								/>
 							</button>
 						</Link>
 						<button
@@ -78,7 +85,7 @@ export const Minutas = props => {
 					<Alert
 						type="success"
 						strong="Atención,"
-						message="El acta de la reunión ha sido enviada exitosamente a todos sus asistentes"
+						message="El acta de la reunión ha sido enviada exitosamente a todos los asistentes"
 						returnState={returnBaseState}
 					/>
 				</div>

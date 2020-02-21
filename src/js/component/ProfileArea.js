@@ -1,7 +1,9 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Context } from "./../store/appContext";
 import { string } from "prop-types";
+import PropTypes from "prop-types";
 
 class ProfileArea extends React.Component {
 	static contextType = Context;
@@ -12,8 +14,7 @@ class ProfileArea extends React.Component {
 			name: null,
 			email: null,
 			password: null,
-			repeated_pass: "123",
-			red: false
+			repeated_pass: "123"
 		};
 	}
 
@@ -30,7 +31,7 @@ class ProfileArea extends React.Component {
 		let user_name = contexto.actions.getCurrentUser("name");
 		this.setState({ name: user_name });
 
-		var url = "http://127.0.0.1:5000/api/users/" + user_id;
+		var url = "http://localhost:5000/api/users/" + user_id;
 		fetch(url, {
 			headers: {
 				"Content-Type": "application/json"
@@ -52,11 +53,11 @@ class ProfileArea extends React.Component {
 		});
 	};
 
-	onSubmitUser = e => {
+	onSubmitUser = (e, history) => {
 		e.preventDefault();
 		const contexto = this.context;
 
-		var url = "http://127.0.0.1:5000/api/users/" + this.state.id;
+		var url = "http://localhost:5000/api/users/" + this.state.id;
 
 		let form = {
 			fullname: this.state.name,
@@ -67,24 +68,21 @@ class ProfileArea extends React.Component {
 		if (this.state.password === this.state.repeated_pass) {
 			fetch(url, {
 				method: "PUT",
-				body: JSON.stringify(form), // data can be `string` or {object}!
+				body: JSON.stringify(form),
 				headers: {
 					"Content-Type": "application/json"
 				}
 			})
 				.then(res => res.json())
 				.then(response => {
-					contexto.actions.putCurrentUser(response.id, response.fullname),
-						this.setState({ id: response.id, red: true });
+					contexto.actions.putCurrentUser(response.id, response.fullname), this.setState({ id: response.id });
 				})
 				.catch(error => console.error("Error:", error));
 		}
+		history.push("/principal");
 	};
 
 	render() {
-		// if (this.state.red) {
-		// 	return <Redirect to="/principal" />;
-		// }
 		return (
 			<>
 				<div className="row content-center pt-3">
@@ -150,7 +148,7 @@ class ProfileArea extends React.Component {
 								</div>
 								<div className="formbuilder-text form-group field-password">
 									<label htmlFor="password" className="formbuilder-text-label">
-										Contraseña
+										Nueva Contraseña
 										<span className="formbuilder-required">*</span>
 									</label>
 									<input
@@ -168,7 +166,7 @@ class ProfileArea extends React.Component {
 								</div>
 								<div className="formbuilder-text form-group field-repeated_pass">
 									<label htmlFor="repeated_pass" className="formbuilder-text-label">
-										Contraseña
+										Repetir Nueva Contraseña
 										<span className="formbuilder-required">*</span>
 									</label>
 									<input
@@ -184,12 +182,11 @@ class ProfileArea extends React.Component {
 										onChange={e => this.handleChange(e)}
 									/>
 								</div>
-
 								<button
 									type="submit"
-									className="btn mt-4 btn-block btn-outline-dark p-2"
-									onClick={e => this.onSubmitUser(e)}>
-									<b>Guardar</b>
+									className="btn mt-3 btn-block btn-outline-dark p-1"
+									onClick={e => this.onSubmitUser(e, this.props.history)}>
+									<b>Guardar Cambios</b>
 								</button>
 							</div>
 						</form>
@@ -200,3 +197,7 @@ class ProfileArea extends React.Component {
 	}
 }
 export default ProfileArea;
+
+ProfileArea.propTypes = {
+	history: PropTypes.object
+};

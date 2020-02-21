@@ -1,8 +1,9 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
+import PropTypes from "prop-types";
 import { Context } from "./../store/appContext";
 
-export const Navbar = () => {
+const Navbar = props => {
 	const { store, actions } = useContext(Context);
 
 	return (
@@ -39,12 +40,10 @@ export const Navbar = () => {
 								<Link to="/myprofile" className="dropdown-item">
 									Mi Perfil
 								</Link>
-								<Link to="/payment" className="dropdown-item">
-									Pago
-								</Link>
-								<Link to="/" className="dropdown-item">
+								<button className="dropdown-item disabled">Pago</button>
+								<button className="btn dropdown-item" onClick={() => actions.resetCUI(props.history)}>
 									Salir
-								</Link>
+								</button>
 							</div>
 						</li>
 					</ul>
@@ -53,3 +52,9 @@ export const Navbar = () => {
 		</nav>
 	);
 };
+
+Navbar.propTypes = {
+	history: PropTypes.object
+};
+
+export default withRouter(Navbar);

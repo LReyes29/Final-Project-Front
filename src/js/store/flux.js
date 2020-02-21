@@ -2,16 +2,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			////
-			currentUserId: 1,
-			currentUserName: "Luis Reyes",
+			currentUserId: "",
+			currentUserName: "",
 			////
 			userMeetings: [],
 			////
 			currentMeetingId: "",
 			currentMeeting: {}
-			////
-			//currentTopicId: "",
-			//currentTopic: {}
 		},
 		actions: {
 			putCurrentUser: (id, user) => {
@@ -80,7 +77,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			handleChangeMeeting: e => {
 				const store = getStore();
-				const cM = store.currentMeeting;
+				const cM = Object.assign({}, store.currentMeeting);
 				cM[e.target.name] = e.target.value;
 				setStore({ currentMeeting: cM });
 			},
@@ -114,6 +111,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			onUpdateMeeting: (data, id) => {
+				data.done = "true";
+				console.log(data);
 				fetch("http://localhost:5000/api/meetings/" + id, {
 					method: "PUT",
 					body: JSON.stringify(data),
@@ -219,6 +218,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.then(resp => resp.json())
 					.then(data => console.log(data))
 					.catch(error => console.log(error));
+			},
+
+			resetCUI: history => {
+				setStore({ currentUserId: "" });
+				setStore({ currentUserName: "" });
+				history.push("/");
 			}
 		}
 	};

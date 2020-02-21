@@ -3,13 +3,14 @@ import { Link } from "react-router-dom";
 import { Minutas } from "../component/minutas.js";
 import "../../styles/home.scss";
 import { Context } from "./../store/appContext";
-import { Redirect } from "react-router";
+import PropTypes from "prop-types";
 
-export const Principal = () => {
+export const Principal = props => {
 	const { store, actions } = useContext(Context);
 
 	useEffect(() => {
-		actions.getFilteredMinutas("http://localhost:5000/api/meetings");
+		if (store.currentUserId != "") actions.getFilteredMinutas("http://localhost:5000/api/meetings");
+		else props.history.push("/");
 	}, []);
 
 	const getLastMeeting = () => {
@@ -87,4 +88,8 @@ export const Principal = () => {
 			</div>
 		</div>
 	);
+};
+
+Principal.propTypes = {
+	history: PropTypes.object
 };

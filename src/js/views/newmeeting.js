@@ -34,8 +34,13 @@ export const NewMeeting = props => {
 		],
 		place: "",
 		description: "",
-		target: ""
+		target: "",
+		done: "false"
 	});
+
+	useEffect(() => {
+		if (store.currentUserId === "") props.history.push("/");
+	}, []);
 
 	function handleChange(e, name) {
 		const copy_array = Object.assign({}, state);
@@ -63,7 +68,6 @@ export const NewMeeting = props => {
 		newM.guest_mails = data.guests.map((item, i) => {
 			return item.email;
 		});
-		console.log(newM);
 
 		actions.onSendInvitation(newM);
 	}
@@ -402,4 +406,8 @@ export const NewMeeting = props => {
 			</div>
 		</div>
 	);
+};
+
+NewMeeting.propTypes = {
+	history: PropTypes.object
 };

@@ -1,9 +1,5 @@
 import React from "react";
-<<<<<<< HEAD
 import PropTypes from "prop-types";
-=======
-import { Redirect } from "react-router-dom";
->>>>>>> a950d693112e9330492d1454e5850b159123728e
 import { Alert } from "reactstrap";
 import "../../styles/landing.css";
 import { Context } from "./../store/appContext";
@@ -18,10 +14,6 @@ class Login extends React.Component {
 			email: "",
 			password: "",
 			repeated_pass: "123",
-<<<<<<< HEAD
-=======
-			red: false,
->>>>>>> a950d693112e9330492d1454e5850b159123728e
 			visibleAlerta: false,
 			estadoAlerta: "",
 			alertMessage: ""
@@ -46,10 +38,6 @@ class Login extends React.Component {
 			password: this.state.password,
 			repeated_pass: this.state.repeated_pass
 		};
-<<<<<<< HEAD
-=======
-
->>>>>>> a950d693112e9330492d1454e5850b159123728e
 		fetch(url, {
 			method: "POST", // or 'PUT'
 			body: JSON.stringify(form), // data can be `string` or {object}!
@@ -59,17 +47,10 @@ class Login extends React.Component {
 		})
 			.then(res => res.json())
 			.then(response => {
-<<<<<<< HEAD
 				if (response.status == "Success") {
 					contexto.actions.putCurrentUser(response.id, response.fullname);
 					this.setState({ id: response.id });
 					history.push("/principal");
-=======
-				if (response.status == "Succes") {
-					contexto.actions.putCurrentUser(response.id, response.fullname);
-					this.setState({ id: response.id });
-					this.setState({ red: true });
->>>>>>> a950d693112e9330492d1454e5850b159123728e
 				}
 				if (response.status == "Alerta") {
 					this.setState({
@@ -100,17 +81,10 @@ class Login extends React.Component {
 			})
 				.then(res => res.json())
 				.then(response => {
-<<<<<<< HEAD
 					if (response.status == "Success") {
 						contexto.actions.putCurrentUser(response.id, response.fullname);
 						this.setState({ id: response.id });
 						history.push("/principal");
-=======
-					if (response.status == "Succes") {
-						contexto.actions.putCurrentUser(response.id, response.fullname);
-						this.setState({ id: response.id });
-						this.setState({ red: true });
->>>>>>> a950d693112e9330492d1454e5850b159123728e
 					}
 					if (response.status == "Alerta") {
 						this.setState({
@@ -132,16 +106,6 @@ class Login extends React.Component {
 	}
 
 	render() {
-<<<<<<< HEAD
-=======
-		if (this.state.red) {
-			return <Redirect to="/principal" />;
-		}
-		const alerta = {
-			status: "Alerta",
-			mensaje: "prueba"
-		};
->>>>>>> a950d693112e9330492d1454e5850b159123728e
 		return (
 			<div className="col-md-12">
 				<ul className="nav nav-tabs pl-5 border-0">

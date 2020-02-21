@@ -79,10 +79,7 @@
 		"react-polyfills": "0.0.1",
 		"react-router": "^4.3.1",
 		"react-router-dom": "^4.3.1",
-<<<<<<< HEAD
-=======
 		"react-use-auth": "^0.5.3",
->>>>>>> a950d693112e9330492d1454e5850b159123728e
 		"reactstrap": "^8.4.1"
 	}
 }

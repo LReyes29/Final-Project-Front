@@ -23,12 +23,8 @@ export const Alert = props => {
 };
 
 Alert.propTypes = {
-	returnState: PropTypes.function,
+	returnState: PropTypes.func,
 	type: PropTypes.string,
 	strong: PropTypes.string,
 	message: PropTypes.string
-};
-
-Alert.defaultProps = {
-	returnState: null
 };

@@ -144,8 +144,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			onCreateTopic: data => {
 				const store = getStore();
-				const newMeeting = store.currentMeeting;
+				const newMeeting = Object.assign({}, store.currentMeeting);
 				newMeeting.topics.push(data);
+				console.log(newMeeting);
 				fetch("http://localhost:5000/api/meetings/" + store.currentMeetingId, {
 					method: "PUT",
 					body: JSON.stringify(newMeeting),
@@ -159,11 +160,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			onUpdateTopic: (data, id) => {
 				const store = getStore();
-				const updatedMeeting = store.currentMeeting;
+				const updatedMeeting = Object.assign({}, store.currentMeeting);
 				const index = store.currentMeeting.topics.findIndex((item, i) => {
 					return item.id == id;
 				});
 				updatedMeeting.topics[index] = data;
+				delete updatedMeeting.created_date;
+				console.log(updatedMeeting);
 				fetch("http://localhost:5000/api/meetings/" + store.currentMeetingId, {
 					method: "PUT",
 					body: JSON.stringify(updatedMeeting),
@@ -177,7 +180,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			onDeleteTopic: id => {
 				const store = getStore();
-				const dT = store.currentMeeting;
+				const dT = Object.assign({}, store.currentMeeting);
 				const restOfThem = store.currentMeeting.topics.filter(item => {
 					return item.id !== id;
 				});

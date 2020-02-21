@@ -32,10 +32,15 @@ export const MemoDetails = props => {
 		topicNoTitleNoPriority: false
 	});
 
-	useEffect(() => {
-		if (store.currentUserId === "") props.history.push("/");
-		else actions.getCurrentMeeting();
+	useEffect(
+		() => {
+			if (store.currentUserId === "") props.history.push("/");
+			else actions.getCurrentMeeting();
+		},
+		[store.userMeetings]
+	);
 
+	useEffect(() => {
 		let sum_time = 0;
 		if (store.currentMeeting.topics != null) {
 			store.currentMeeting.topics.forEach(item => {
@@ -190,6 +195,7 @@ export const MemoDetails = props => {
 									<input
 										type="text"
 										className="form-control"
+										readOnly
 										defaultValue={store.currentUserName}
 										//placeholder="Nombre Citador"
 									/>

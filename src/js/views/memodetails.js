@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
-import ReactDOM from "react-dom";
 
-import Countdown, { zeroPad } from "react-countdown-now";
+import Countdown from "react-countdown-now";
 
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
@@ -97,9 +96,9 @@ export const MemoDetails = props => {
 		}
 	}
 
-	function onUpdateTopic(data, id) {
+	function onUpdateTopic(data) {
 		if (data.title != "" && data.priority != "") {
-			actions.onUpdateTopic(data, id);
+			actions.onUpdateTopic();
 		} else {
 			setAlert({ topicNoTitleNoPriority: true });
 		}
@@ -353,7 +352,7 @@ export const MemoDetails = props => {
 					<div className="col">
 						{!!store.currentMeeting.topics &&
 							store.currentMeeting.topics.map((item, i) => {
-								return <Temas topic={item} key={i} update={onUpdateTopic} />;
+								return <Temas topic={item} index={i} key={i} update={onUpdateTopic} />;
 							})}
 
 						<li className="list-group-item p-1">
@@ -449,7 +448,7 @@ export const MemoDetails = props => {
 					<Alert
 						type="primary"
 						strong="Atención,"
-						message="Debe asignarle una prioridad al tema antes de guardarlo"
+						message="Debe asignarle un título y una prioridad al tema antes de guardarlo"
 						returnState={returnBaseState}
 					/>
 				) : (
@@ -459,7 +458,7 @@ export const MemoDetails = props => {
 					<Alert
 						type="primary"
 						strong="Atención,"
-						message="Debe ingresar el título del tema antes de guardarlo"
+						message="Debe asignarle un título al tema antes de guardarlo"
 						returnState={returnBaseState}
 					/>
 				) : (

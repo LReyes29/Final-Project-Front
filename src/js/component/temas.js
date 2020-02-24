@@ -1,28 +1,32 @@
-import React, { useState, useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { withRouter } from "react-router-dom";
+import React, { useState, useContext } from "react";
 import PropTypes from "prop-types";
 import { Context } from "./../store/appContext";
 
 export const Temas = props => {
 	const { store, actions } = useContext(Context);
-	const [changingTopic, setChangingTopic] = useState(props.topic);
+	//const [changingTopic, setChangingTopic] = useState(props.index);
 
-	useEffect(
-		() => {
-			setChangingTopic(props.topic);
-		},
-		[props.topic]
-	);
+	// useEffect(
+	// 	() => {
+	// 		setChangingTopic(props.topic);
+	// 	},
+	// 	[props.topic]
+	// );
 
-	function handleChangeInput(e) {
-		const data = Object.assign({}, changingTopic);
-		data[e.target.name] = e.target.value;
-		setChangingTopic(data);
-	}
+	// function handleChangeInput(e) {
+	// 	const data = Object.assign({}, changingTopic);
+	// 	data[e.target.name] = e.target.value;
+	// 	setChangingTopic(data);
+	// }
 
 	function alreadyChecked() {
-		if (props.topic.title != "" && props.topic.priority != "") {
+		if (
+			props.topic.title != "" &&
+			props.topic.priority != "" &&
+			props.topic.notes != "" &&
+			props.topic.care != "" &&
+			props.topic.tracking != ""
+		) {
 			return true;
 		}
 		return false;
@@ -54,12 +58,17 @@ export const Temas = props => {
 						<input
 							type="text"
 							name="title"
-							value={changingTopic.title}
-							onChange={e => handleChangeInput(e)}
+							//value={changingTopic.title}
+							value={store.currentMeeting.topics[props.index].title}
+							onChange={e => actions.handleChangeTopic(e, props.index)}
 						/>
 					</div>
 					<div className="col-md-1 d-flex align-item-center d-flex justify-content-center px-0">
-						<select name="priority" value={changingTopic.priority} onChange={e => handleChangeInput(e)}>
+						<select
+							name="priority"
+							//value={changingTopic.priority}
+							value={store.currentMeeting.topics[props.index].priority}
+							onChange={e => actions.handleChangeTopic(e, props.index)}>
 							<option value="" />
 							<option value="Alta">Alta</option>
 							<option value="Media">Media</option>
@@ -70,8 +79,9 @@ export const Temas = props => {
 						<input
 							type="text"
 							name="notes"
-							value={changingTopic.notes}
-							onChange={e => handleChangeInput(e)}
+							//value={changingTopic.notes}
+							value={store.currentMeeting.topics[props.index].notes}
+							onChange={e => actions.handleChangeTopic(e, props.index)}
 							style={{ width: "100%" }}
 						/>
 					</div>
@@ -79,31 +89,33 @@ export const Temas = props => {
 						<input
 							type="text"
 							name="care"
-							value={changingTopic.care}
-							onChange={e => handleChangeInput(e)}
+							//value={changingTopic.care}
+							value={store.currentMeeting.topics[props.index].care}
+							onChange={e => actions.handleChangeTopic(e, props.index)}
 						/>
 					</div>
 					<div className="col-md-2">
 						<input
 							type="date"
 							name="tracking"
-							value={changingTopic.tracking}
-							onChange={e => handleChangeInput(e)}
+							//value={changingTopic.tracking}
+							value={store.currentMeeting.topics[props.index].tracking}
+							onChange={e => actions.handleChangeTopic(e, props.index)}
 						/>
 					</div>
 					<div className="col-md-1">
 						<i
-							className={"fas fa-check" + (alreadyChecked() ? "-double disabled" : "")}
+							className={"fas fa-check" + (alreadyChecked() ? "-double" : "")}
 							style={{ paddingLeft: "7px" }}
-							onClick={() => {
-								props.update(changingTopic, props.topic.id);
-							}}
+							// onClick={() => {
+							// 	props.update(store.currentMeeting.topics[props.index]);
+							// }}
 						/>{" "}
 						<i
 							className="fa fa-trash"
 							style={{ paddingLeft: "7px", paddingRight: "5px" }}
 							onClick={() => {
-								actions.onDeleteTopic(props.topic.id);
+								actions.onDeleteTopic(store.currentMeeting.topics[props.index].id);
 							}}
 						/>
 					</div>
@@ -113,17 +125,17 @@ export const Temas = props => {
 	);
 };
 
-Temas.propTypes = {
-	id: PropTypes.number,
-	meeting_id: PropTypes.number,
-	title: PropTypes.string,
-	priority: PropTypes.string,
-	notes: PropTypes.string,
-	care: PropTypes.string,
-	tracking: PropTypes.string,
-	duration: PropTypes.number
-};
+// Temas.propTypes = {
+// 	id: PropTypes.number,
+// 	meeting_id: PropTypes.number,
+// 	title: PropTypes.string,
+// 	priority: PropTypes.string,
+// 	notes: PropTypes.string,
+// 	care: PropTypes.string,
+// 	tracking: PropTypes.string,
+// 	duration: PropTypes.number
+// };
 
-Temas.defaultProps = {
-	onDelete: null
-};
+// Temas.defaultProps = {
+// 	onDelete: null
+// };

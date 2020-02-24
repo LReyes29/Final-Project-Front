@@ -1,6 +1,5 @@
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import "../../styles/landing.css";
-import { Context } from "./../store/appContext";
 import Login from "../component/login.js";
 import favicon from "../../img/Logo_banner.png";
 

@@ -82,6 +82,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ currentMeeting: cM });
 			},
 
+			handleChangeTopic: (e, index) => {
+				const store = getStore();
+				const nValue = Object.assign({}, store.currentMeeting.topics);
+				nValue[index][e.target.name] = e.target.value;
+				const cTopic = store.currentMeeting.topics[index];
+				setStore({ cTopic: nValue });
+			},
+
 			saveTopicId: id => {
 				setStore({ currentTopicId: id });
 			},
@@ -158,13 +166,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.then(() => getActions().getFilteredMinutas("http://localhost:5000/api/meetings"));
 			},
 
-			onUpdateTopic: (data, id) => {
+			onUpdateTopic: () => {
 				const store = getStore();
 				const updatedMeeting = Object.assign({}, store.currentMeeting);
-				const index = store.currentMeeting.topics.findIndex((item, i) => {
-					return item.id == id;
-				});
-				updatedMeeting.topics[index] = data;
+				// const index = store.currentMeeting.topics.findIndex((item, i) => {
+				// 	return item.id == id;
+				// });
+				// updatedMeeting.topics[index] = data;
 				delete updatedMeeting.created_date;
 				console.log(updatedMeeting);
 				fetch("http://localhost:5000/api/meetings/" + store.currentMeetingId, {
@@ -192,9 +200,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					headers: {
 						"Content-Type": "application/json"
 					}
-				})
-					.then(resp => resp.json())
-					.then(() => getActions().getFilteredMinutas("http://localhost:5000/api/meetings"));
+				}).then(resp => resp.json());
+				//.then(() => getActions().getFilteredMinutas("http://localhost:5000/api/meetings"));
 			},
 
 			onSendInvitation: data => {

@@ -1,8 +1,5 @@
-import React, { useState, useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { withRouter } from "react-router-dom";
+import React from "react";
 import PropTypes from "prop-types";
-import { Context } from "./../store/appContext";
 
 export const Alert = props => {
 	return (

@@ -1,9 +1,8 @@
 import React from "react";
-import { Redirect } from "react-router-dom";
-import { Link } from "react-router-dom";
 import { Context } from "./../store/appContext";
-import { string } from "prop-types";
 import PropTypes from "prop-types";
+import { Alert } from "reactstrap";
+import "../../styles/landing.css";
 
 class ProfileArea extends React.Component {
 	static contextType = Context;
@@ -14,23 +13,21 @@ class ProfileArea extends React.Component {
 			name: null,
 			email: null,
 			password: null,
-			repeated_pass: "123"
+			repeated_pass: "123",
+			visibleAlerta: false,
+			estadoAlerta: "",
+			alertMessage: ""
 		};
 	}
-
-	componentDidMount() {
+	UNSAFE_componentWillMount() {
 		this.getUSerInfo();
 	}
-
 	getUSerInfo() {
 		const contexto = this.context;
-
 		let user_id = contexto.actions.getCurrentUser("id");
 		this.setState({ id: user_id });
-
 		let user_name = contexto.actions.getCurrentUser("name");
 		this.setState({ name: user_name });
-
 		var url = "http://localhost:5000/api/users/" + user_id;
 		fetch(url, {
 			headers: {
@@ -45,61 +42,79 @@ class ProfileArea extends React.Component {
 				})
 			);
 	}
-
 	handleChange = e => {
 		e.preventDefault();
 		this.setState({
-			[e.target.name]: e.target.value
+			[e.target.name]: e.target.value,
+			visibleAlerta: false
 		});
 	};
-
 	onSubmitUser = (e, history) => {
 		e.preventDefault();
 		const contexto = this.context;
-
 		var url = "http://localhost:5000/api/users/" + this.state.id;
-
 		let form = {
 			fullname: this.state.name,
 			email: this.state.email,
-			password: this.state.password
+			password: this.state.password,
+			repeated_pass: this.state.repeated_pass
 		};
-
-		if (this.state.password === this.state.repeated_pass) {
-			fetch(url, {
-				method: "PUT",
-				body: JSON.stringify(form),
-				headers: {
-					"Content-Type": "application/json"
+		fetch(url, {
+			method: "PUT",
+			body: JSON.stringify(form),
+			headers: {
+				"Content-Type": "application/json"
+			}
+		})
+			.then(res => res.json())
+			.then(response => {
+				if (response.status == "Success") {
+					contexto.actions.putCurrentUser(response.id, response.fullname);
+					history.push("/principal");
+				}
+				if (response.status == "Alerta") {
+					this.setState({
+						alertMessage: response.msg,
+						estadoAlerta: response.status
+					});
+					this.AlertToggle();
 				}
 			})
-				.then(res => res.json())
-				.then(response => {
-					contexto.actions.putCurrentUser(response.id, response.fullname), this.setState({ id: response.id });
-				})
-				.catch(error => console.error("Error:", error));
-		}
-		history.push("/principal");
+			.catch(error => console.error("Error:", error));
 	};
-
+	AlertToggle() {
+		this.setState({
+			visibleAlerta: !this.state.visibleAlerta
+		});
+	}
 	render() {
 		return (
 			<>
 				<div className="row">
-					<div className="col-md-8">
-						<ul className="p-3 pt-5">
-							<li className="pb-3">
-								<h3>Nombre: {this.state.name}</h3>
+					<div className="col-md-2" />
+					<div className="col-md-4">
+						<ul id="lista-perfil" className="p-3 pt-5">
+							<li className="pb-3 pt-5 flex">
+								<div className="d-inline">
+									<i className="fas fa-caret-right d-inline" style={{ fontSize: "35px" }} />
+									<h3 className="d-inline pl-3">Nombre: {this.state.name}</h3>
+								</div>
 							</li>
 							<li className="pb-3">
-								<h3>Email: {this.state.email}</h3>
+								<div className="d-inline">
+									<i className="fas fa-caret-right d-inline" style={{ fontSize: "35px" }} />
+									<h3 className="d-inline pl-3">Email: {this.state.email}</h3>
+								</div>
 							</li>
 							<li>
-								<h3>Contraseña: {this.state.password}</h3>
+								<div className="d-inline">
+									<i className="fas fa-caret-right d-inline" style={{ fontSize: "35px" }} />
+									<h3 className="d-inline pl-3">Contraseña: {this.state.password}</h3>
+								</div>
 							</li>
 						</ul>
 					</div>
-					<div className="col-md-4">
+					<div className="col-md-4 pt-5">
 						<form id="rendered-form">
 							<div className="rendered-form">
 								<div className="">
@@ -179,6 +194,13 @@ class ProfileArea extends React.Component {
 										onChange={e => this.handleChange(e)}
 									/>
 								</div>
+								<Alert
+									color="danger"
+									isOpen={this.state.visibleAlerta}
+									role="alert"
+									toggle={this.AlertToggle.bind(this)}>
+									{this.state.alertMessage}
+								</Alert>
 								<button
 									type="submit"
 									className="btn mt-3 btn-block btn-outline-dark p-1"
@@ -188,13 +210,13 @@ class ProfileArea extends React.Component {
 							</div>
 						</form>
 					</div>
+					<div className="col-md-2" />
 				</div>
 			</>
 		);
 	}
 }
 export default ProfileArea;
-
 ProfileArea.propTypes = {
 	history: PropTypes.object
 };

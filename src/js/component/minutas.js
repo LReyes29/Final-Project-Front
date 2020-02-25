@@ -70,7 +70,7 @@ export const Minutas = props => {
 							<i className="fas fa-trash" />
 						</button>
 						<button
-							title="Enviar Minuta a Asistentes"
+							title="Enviar Acta a Asistentes"
 							className="btn"
 							onClick={() => sendData(props.meeting.id)}>
 							<i className="far fa-paper-plane" />

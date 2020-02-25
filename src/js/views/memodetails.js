@@ -67,10 +67,10 @@ export const MemoDetails = props => {
 			setAlert({
 				topicNoTitle: false
 			});
-		else if (alert.topicNoTitleNoPriority == true)
-			setAlert({
-				topicNoTitleNoPriority: false
-			});
+		// else if (alert.topicNoTitleNoPriority == true)
+		// 	setAlert({
+		// 		topicNoTitleNoPriority: false
+		// 	});
 	}
 
 	function handleChangeNewTopic(e) {
@@ -96,13 +96,13 @@ export const MemoDetails = props => {
 		}
 	}
 
-	function onUpdateTopic(data) {
-		if (data.title != "" && data.priority != "") {
-			actions.onUpdateTopic();
-		} else {
-			setAlert({ topicNoTitleNoPriority: true });
-		}
-	}
+	// function onUpdateTopic(data) {
+	// 	if (data.title != "" && data.priority != "") {
+	// 		actions.onUpdateTopic();
+	// 	} else {
+	// 		setAlert({ topicNoTitleNoPriority: true });
+	// 	}
+	// }
 
 	return (
 		<>
@@ -243,7 +243,7 @@ export const MemoDetails = props => {
 					<Alert
 						type="warning"
 						strong="Atención"
-						message="La reunión se encuentra detenida"
+						message="La reunión se encuentra detenida. Cierre esta alerta para reanudar."
 						returnState={returnBaseState}
 					/>
 				) : (
@@ -352,7 +352,14 @@ export const MemoDetails = props => {
 					<div className="col">
 						{!!store.currentMeeting.topics &&
 							store.currentMeeting.topics.map((item, i) => {
-								return <Temas topic={item} index={i} key={i} update={onUpdateTopic} />;
+								return (
+									<Temas
+										topic={item}
+										index={i}
+										key={i}
+										//update={onUpdateTopic}
+									/>
+								);
 							})}
 
 						<li className="list-group-item p-1">
@@ -444,7 +451,7 @@ export const MemoDetails = props => {
 			</div>
 
 			<div>
-				{alert.topicNoTitleNoPriority == true ? (
+				{/* {alert.topicNoTitleNoPriority == true ? (
 					<Alert
 						type="primary"
 						strong="Atención,"
@@ -453,7 +460,7 @@ export const MemoDetails = props => {
 					/>
 				) : (
 					""
-				)}
+				)} */}
 				{alert.topicNoTitle == true ? (
 					<Alert
 						type="primary"

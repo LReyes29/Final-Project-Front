@@ -91,9 +91,9 @@ class ProfileArea extends React.Component {
 		return (
 			<>
 				<div className="row">
-					<div className="col-md-2" />
-					<div className="col-md-4">
-						<ul id="lista-perfil" className="p-3 pt-5">
+					<div className="col-md-1" />
+					<div className="col-md-6">
+						<ul id="lista-perfil" className="p-3 pt-5" style={{ listStyle: "none" }}>
 							<li className="pb-3 pt-5 flex">
 								<div className="d-inline">
 									<i className="fas fa-caret-right d-inline" style={{ fontSize: "35px" }} />
@@ -210,7 +210,7 @@ class ProfileArea extends React.Component {
 							</div>
 						</form>
 					</div>
-					<div className="col-md-2" />
+					<div className="col-md-1" />
 				</div>
 			</>
 		);

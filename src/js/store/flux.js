@@ -9,6 +9,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			////
 			currentMeetingId: "",
 			currentMeeting: {}
+			////
 		},
 		actions: {
 			putCurrentUser: (id, user) => {

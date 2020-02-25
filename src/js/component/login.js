@@ -19,7 +19,6 @@ class Login extends React.Component {
 			alertMessage: ""
 		};
 	}
-
 	handleChange = e => {
 		e.preventDefault();
 		this.setState({
@@ -27,7 +26,6 @@ class Login extends React.Component {
 			visibleAlerta: false
 		});
 	};
-
 	onSubmitRegister = (e, history) => {
 		e.preventDefault();
 		const contexto = this.context;
@@ -62,7 +60,6 @@ class Login extends React.Component {
 			})
 			.catch(error => console.error("Error:", error));
 	};
-
 	onSubmitLogin = (e, history) => {
 		e.preventDefault();
 		const contexto = this.context;
@@ -98,17 +95,20 @@ class Login extends React.Component {
 				.catch(error => console.error("Error:", error));
 		}
 	};
-
 	AlertToggle() {
 		this.setState({
 			visibleAlerta: !this.state.visibleAlerta
 		});
 	}
-
+	alertOff() {
+		this.setState({
+			visibleAlerta: false
+		});
+	}
 	render() {
 		return (
 			<div className="col-md-12">
-				<ul className="nav nav-tabs pl-5 border-0">
+				<ul className="nav nav-tabs pl-5 border-0" onClick={() => this.alertOff()}>
 					<li className="nav-item bg-secondary rounded-top shadow-sm">
 						<a href="" className="nav-link active" data-toggle="tab" data-target="#tabone">
 							Login
@@ -228,9 +228,7 @@ class Login extends React.Component {
 		);
 	}
 }
-
 export default Login;
-
 Login.propTypes = {
 	history: PropTypes.object
 };

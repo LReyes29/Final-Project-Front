@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import "../../styles/home.scss";
 import { Context } from "../store/appContext";
-
+import { Alert } from "reactstrap";
 export const NewMeeting = props => {
 	const { store, actions } = useContext(Context);
 	const [state, setState] = useState({
@@ -37,53 +37,77 @@ export const NewMeeting = props => {
 		target: "",
 		done: "false"
 	});
-
+	const [alerta, setAlert] = useState({
+		bolean: false,
+		msj: ""
+	});
 	useEffect(() => {
 		if (store.currentUserId === "") props.history.push("/");
 	}, []);
-
 	function handleChange(e, name) {
 		const copy_array = Object.assign({}, state);
 		copy_array[name] = e.target.value;
 		setState(copy_array);
 	}
-
 	function handleChangeTopic(e, name) {
 		const copy_array = Object.assign({}, topic);
 		copy_array[name] = e.target.value;
 		setTopic(copy_array);
 	}
-
-	function saveAndSendData(data) {
-		actions.onCreateMeeting(data);
-
-		let newM = {};
-		newM.user = store.currentUserName;
-		newM.title = data.title;
-		//newM.description = data.description;
-		newM.meeting_date = data.meeting_date;
-		newM.meeting_hour = data.meeting_hour;
-		newM.place = data.place;
-		newM.topics = data.topics;
-		newM.guest_mails = data.guests.map((item, i) => {
-			return item.email;
-		});
-
-		actions.onSendInvitation(newM);
+	function saveAndSendData(data, history) {
+		//Aqui va la validacion de campos
+		let mensaje = Object.assign({}, alerta);
+		if (state.meeting_date === "") {
+			mensaje.bolean = true;
+			mensaje.msj = "Debe ingresar la fecha de la reunion";
+			setAlert(mensaje);
+		} else if (state.meeting_hour === "") {
+			mensaje.bolean = true;
+			mensaje.msj = "Debe ingresar la hora de la reunion";
+			setAlert(mensaje);
+		} else if (state.project_name === "") {
+			mensaje.bolean = true;
+			mensaje.msj = "Debe ingresar el nombre del proyecto";
+			setAlert(mensaje);
+		} else if (state.title === "") {
+			mensaje.bolean = true;
+			mensaje.msj = "Debe ingresar el título de la reunión";
+			setAlert(mensaje);
+		} else if (state.place === "") {
+			mensaje.bolean = true;
+			mensaje.msj = "Debe ingresar el lugar de la reunión";
+			setAlert(mensaje);
+		} else if (state.guests[0].email === "") {
+			mensaje.bolean = true;
+			mensaje.msj = "Debe ingresar el correo de, al menos, uno de los invitados";
+			setAlert(mensaje);
+		} else {
+			actions.onCreateMeeting(data);
+			let newM = {};
+			newM.user = store.currentUserName;
+			newM.title = data.title;
+			//newM.description = data.description;
+			newM.meeting_date = data.meeting_date;
+			newM.meeting_hour = data.meeting_hour;
+			newM.place = data.place;
+			newM.topics = data.topics;
+			newM.guest_mails = data.guests.map((item, i) => {
+				return item.email;
+			});
+			actions.onSendInvitation(newM);
+			history.push("/principal");
+		}
 	}
-
 	function handleChangeGuest(e, name, i) {
 		const copy_array = Object.assign({}, state);
 		copy_array.guests[i][name] = e.target.value;
 		setState(copy_array);
 	}
-
 	function handleChangeTopic(e, name, i) {
 		const copy_array = Object.assign({}, state);
 		copy_array.topics[i][name] = e.target.value;
 		setState(copy_array);
 	}
-
 	function addGuest() {
 		const copy_array = Object.assign({}, state);
 		copy_array.guests.push({
@@ -94,7 +118,6 @@ export const NewMeeting = props => {
 		});
 		setState(copy_array);
 	}
-
 	function addTopic() {
 		const copy_array = Object.assign({}, state);
 		copy_array.topics.push({
@@ -108,19 +131,22 @@ export const NewMeeting = props => {
 		});
 		setState(copy_array);
 	}
-
 	function deleteGuest(i) {
 		const copy_array = Object.assign({}, state);
 		copy_array.guests.splice(i, 1);
 		setState(copy_array);
 	}
-
 	function deleteTopic(i) {
 		const copy_array = Object.assign({}, state);
 		copy_array.topics.splice(i, 1);
 		setState(copy_array);
 	}
-
+	function AlertToggle() {
+		const copy_array = Object.assign({}, alerta);
+		if (copy_array.bolean === false) copy_array.bolean = true;
+		else copy_array.bolean = false;
+		setAlert(copy_array);
+	}
 	const sumaGuest = (
 		<button
 			type="button"
@@ -131,7 +157,6 @@ export const NewMeeting = props => {
 			<i className="fa fa-plus" />
 		</button>
 	);
-
 	const restaGuest = i => {
 		return (
 			<button
@@ -144,7 +169,6 @@ export const NewMeeting = props => {
 			</button>
 		);
 	};
-
 	const sumaTopic = (
 		<button
 			type="button"
@@ -155,7 +179,6 @@ export const NewMeeting = props => {
 			<i className="fa fa-plus" />
 		</button>
 	);
-
 	const restaTopic = i => {
 		return (
 			<button
@@ -168,7 +191,6 @@ export const NewMeeting = props => {
 			</button>
 		);
 	};
-
 	return (
 		<div>
 			<div className="container" style={{ padding: "0px" }}>
@@ -183,6 +205,7 @@ export const NewMeeting = props => {
 								<div className="col-sm-8">
 									<input
 										type="text"
+										required="Required"
 										onChange={e => handleChange(e, "project_name")}
 										className="form-control"
 										value={state.project_name}
@@ -386,28 +409,32 @@ export const NewMeeting = props => {
 					);
 				})}
 			</div>
+			<div>
+				<Alert color="danger" isOpen={alerta.bolean} role="alert" toggle={AlertToggle}>
+					{alerta.msj}
+				</Alert>
+			</div>
 			<div className="container" style={{ padding: "5px" }}>
 				<div className="row" style={{ margin: "0px", marginLeft: "0px", marginTop: "0px" }}>
 					<div className="col d-flex justify-content-left pl-1">
 						<Link className="btn btn-secondary mt-3" to="/principal">
 							Volver
 						</Link>
-						<Link className="" to="/principal">
-							<button
-								className="btn btn-primary mt-3"
-								type="button"
-								onClick={() => saveAndSendData(state)}
-								style={{ marginLeft: "10px" }}>
-								Guardar y Enviar Invitaciones
-							</button>
-						</Link>
+						{/* <Link className="" to="/principal"> */}
+						<button
+							className="btn btn-primary mt-3"
+							type="button"
+							onClick={() => saveAndSendData(state, props.history)}
+							style={{ marginLeft: "10px" }}>
+							Guardar y Enviar Invitaciones
+						</button>
+						{/* </Link> */}
 					</div>
 				</div>
 			</div>
 		</div>
 	);
 };
-
 NewMeeting.propTypes = {
 	history: PropTypes.object
 };

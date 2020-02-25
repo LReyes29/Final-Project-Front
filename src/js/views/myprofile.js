@@ -13,7 +13,7 @@ export const MyProfile = props => {
 
 	return (
 		<>
-			<div className="container">
+			<div className="container-fluid">
 				<ProfileArea history={props.history} />
 			</div>
 		</>

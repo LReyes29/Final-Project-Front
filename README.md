@@ -1,4 +1,4 @@
-# Fronend Proyecto Final De 4Geeks Academy
+# Frontend Proyecto Final De 4Geeks Academy
 
 ### Creadores:
 - Luis Reyes Segner

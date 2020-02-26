@@ -1,9 +1,9 @@
 # Frontend Proyecto Final De 4Geeks Academy
 
 ### Creadores:
-- Luis Reyes Segner
-- Joaquin Nuñez
-- Andrés Dumas
+- [Luis Reyes Segner](https://github.com/LReyes29)
+- [Joaquin Nuñez](https://github.com/joaquin16602)
+- [Andrés Dumas](https://github.com/VR46KS34)
 
 ### Requirements:
 - Make sure you are using node version 8

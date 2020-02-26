@@ -16,3 +16,6 @@ $ npm install
 ## Start coding!
 Start the webpack server with live reload:
 `$ npm run start` for windows, mac, linux or Gitpod.
+
+## License
+[MIT](https://choosealicense.com/licenses/agpl-3.0/)
